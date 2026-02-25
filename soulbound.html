@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soul Bound TCG</title>
+<link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&family=Spectral:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="soulbound.css">
+</head>
+<body>
+
+<!-- TOOLTIP -->
+<div class="card-tooltip" id="cardTooltip">
+  <div style="position:relative;">
+    <img class="tt-img" id="ttImg" src="" alt="">
+    <div class="tt-img-overlay" id="ttImgOverlay"></div>
+  </div>
+  <div class="tt-body">
+    <div class="tt-name" id="ttName"></div>
+    <div class="tt-type" id="ttType"></div>
+    <div class="tt-art" id="ttArt"></div>
+    <div class="tt-stats">
+      <div><div class="tt-sv" style="color:var(--infernal)" id="ttAtk">0</div><div class="tt-sl">ATK</div></div>
+      <div><div class="tt-sv" style="color:var(--pure)" id="ttDef">0</div><div class="tt-sl">DEF</div></div>
+      <div><div class="tt-sv" style="color:var(--gold)" id="ttCost">0</div><div class="tt-sl">Cost</div></div>
+    </div>
+    <div class="tt-div"></div>
+    <div class="tt-abl" id="ttAbl"></div>
+    <div class="tt-desc" id="ttDesc"></div>
+    <div class="tt-extra" id="ttExtra"></div>
+  </div>
+</div>
+<div class="cf" id="cf"></div>
+
+<!-- ══ TITLE ══ -->
+<div class="screen active" id="title-screen" style="overflow:hidden;">
+  <div class="runes-bg" id="runesBg"></div>
+  <div class="menu-float-bg" id="titleFloatBg"></div>
+  <div class="title-c">
+    <div class="sigil"><svg viewBox="0 0 100 100" fill="none">
+  <!-- Outer runic ring -->
+  <circle cx="50" cy="50" r="47" stroke="#c8960e" stroke-width=".6" opacity=".4" stroke-dasharray="3 2"/>
+  <circle cx="50" cy="50" r="42" stroke="#c8960e" stroke-width=".3" opacity=".25"/>
+  <!-- Gothic cross -->
+  <line x1="50" y1="8" x2="50" y2="92" stroke="#c8960e" stroke-width="1.2" opacity=".9"/>
+  <line x1="8" y1="50" x2="92" y2="50" stroke="#c8960e" stroke-width="1.2" opacity=".9"/>
+  <!-- Cross serifs -->
+  <line x1="44" y1="12" x2="56" y2="12" stroke="#c8960e" stroke-width=".8" opacity=".7"/>
+  <line x1="44" y1="88" x2="56" y2="88" stroke="#c8960e" stroke-width=".8" opacity=".7"/>
+  <line x1="12" y1="44" x2="12" y2="56" stroke="#c8960e" stroke-width=".8" opacity=".7"/>
+  <line x1="88" y1="44" x2="88" y2="56" stroke="#c8960e" stroke-width=".8" opacity=".7"/>
+  <!-- Diagonal runes -->
+  <line x1="20" y1="20" x2="34" y2="34" stroke="#c8960e" stroke-width=".5" opacity=".4"/>
+  <line x1="80" y1="20" x2="66" y2="34" stroke="#c8960e" stroke-width=".5" opacity=".4"/>
+  <line x1="20" y1="80" x2="34" y2="66" stroke="#c8960e" stroke-width=".5" opacity=".4"/>
+  <line x1="80" y1="80" x2="66" y2="66" stroke="#c8960e" stroke-width=".5" opacity=".4"/>
+  <!-- Inner ornament ring -->
+  <circle cx="50" cy="50" r="22" stroke="#c8960e" stroke-width=".5" opacity=".5"/>
+  <!-- Center gem -->
+  <polygon points="50,40 58,50 50,60 42,50" fill="#c8960e" opacity=".8"/>
+  <polygon points="50,40 58,50 50,60 42,50" fill="none" stroke="#e8b030" stroke-width=".5"/>
+  <!-- Corner diamonds -->
+  <polygon points="50,4 53,8 50,12 47,8" fill="#c8960e" opacity=".6"/>
+  <polygon points="50,88 53,92 50,96 47,92" fill="#c8960e" opacity=".6"/>
+  <polygon points="4,47 8,50 4,53 0,50" fill="#c8960e" opacity=".6"/>
+  <polygon points="96,47 100,50 96,53 92,50" fill="#c8960e" opacity=".6"/>
+</svg></div>
+    <div class="gtitle">Soul Bound</div>
+    <div class="tsub">Trading Card Game</div>
+    <div class="divider"></div>
+    <p class="tquote">Between life and death, souls are bound to the eternal arena.<br>Only one shall be reborn.</p>
+    <button class="btn btn-lg" onclick="go('title-screen','menu-screen')">Enter the Arena</button>
+  </div>
+</div>
+
+<!-- ══ MENU ══ -->
+<div class="screen" id="menu-screen" style="align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 20%,#1a1008,#0a0806);overflow:hidden;">
+  <div class="menu-float-bg" id="menuFloatBg"></div>
+  <div class="menu-card" style="position:relative;z-index:2;">
+    <div class="menu-title">Soul Bound</div>
+    <div class="menu-sub">Choose Your Path</div>
+      <button class="btn btn-sm" style="position:absolute;top:12px;left:12px;" onclick="go('menu-screen','title-screen')">← Back</button>
+    <div class="menu-opts">
+      <div class="menu-opt" onclick="go('menu-screen','playmode-screen')">
+        <div class="menu-opt-icon">⚔️</div>
+        <div class="menu-opt-text"><div class="menu-opt-title">Play Game</div><div class="menu-opt-desc">Challenge the adversary or a friend</div></div>
+      </div>
+      <div class="menu-opt" onclick="go('menu-screen','catalogue-screen');setCatTab('immortal')">
+        <div class="menu-opt-icon">📖</div>
+        <div class="menu-opt-text"><div class="menu-opt-title">Card Catalogue</div><div class="menu-opt-desc">Browse all cards and immortals</div></div>
+      </div>
+      <div class="menu-opt" onclick="go('menu-screen','deckbuilder-screen');initDeckBuilder()">
+        <div class="menu-opt-icon">🃏</div>
+        <div class="menu-opt-text"><div class="menu-opt-title">Deck Builder</div><div class="menu-opt-desc">Craft your deck around your immortal</div></div>
+      </div>
+      <div class="menu-opt" onclick="openStore()">
+        <div class="menu-opt-icon">🏪</div>
+        <div class="menu-opt-text"><div class="menu-opt-title">Store</div><div class="menu-opt-desc">Browse packs and expansions</div></div>
+      </div>
+      <div class="menu-opt" onclick="openCredits()">
+        <div class="menu-opt-icon">✦</div>
+        <div class="menu-opt-text"><div class="menu-opt-title">Credits</div><div class="menu-opt-desc">Studio FrozenGears</div></div>
+      </div>
+      <div class="menu-opt" onclick="openSettings()">
+        <div class="menu-opt-icon">⚙️</div>
+        <div class="menu-opt-text"><div class="menu-opt-title">Settings</div><div class="menu-opt-desc">Customize your experience</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PLAY MODE ══ -->
+<div class="screen" id="playmode-screen">
+  <div class="pmode-wrap" style="margin:auto;">
+    <div class="pmode-title">Choose Mode</div>
+    <div class="pmode-sub">How do you wish to enter the arena?</div>
+    <div class="pmode-cards">
+      <div class="pmode-card" onclick="go('playmode-screen','setup-screen');renderSetup()">
+        <div class="pmode-icon">🤖</div>
+        <div class="pmode-name">vs Computer</div>
+        <div class="pmode-desc">Choose your immortal and battle the AI adversary.</div>
+      </div>
+      <div class="pmode-card disabled">
+        <div class="pmode-icon">🌐</div>
+        <div class="pmode-name">Online</div>
+        <div class="pmode-desc">Challenge another soul across the void.</div>
+        <div class="badge">Coming Soon</div>
+      </div>
+    </div>
+    <button class="btn btn-sm" onclick="go('playmode-screen','menu-screen')">← Back</button>
+  </div>
+</div>
+
+<!-- ══ SETUP: Choose Immortal → see your deck ══ -->
+<div class="screen" id="setup-screen">
+  <div style="background:var(--bg2);border-bottom:1px solid var(--stone2);padding:10px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0;">
+    <div style="font-family:'Cinzel Decorative',serif;font-size:1.1rem;color:var(--gold);">Choose Your Immortal</div>
+    <div style="font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:2px;color:var(--dim);">Your Immortal determines your factions and deck</div>
+    <button class="btn btn-sm" style="margin-left:auto;" onclick="go('setup-screen','playmode-screen')">← Back</button>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;align-items:center;gap:20px;">
+    <!-- Saved Decks section -->
+    <div id="savedDecksSetup" style="max-width:760px;width:100%;display:none;">
+      <div style="font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--iron2);">⚔ Your Saved Decks</div>
+      <div id="savedDecksList" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px;"></div>
+      <div style="font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:2px;color:var(--dim);margin-top:6px;padding-top:6px;border-top:1px solid var(--iron2);">— or choose a fresh leader below —</div>
+    </div>
+    <!-- Faction filter bar -->
+    <div id="imFacFilters" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:900px;width:100%;"></div>
+    <div class="im-pick-grid" id="imPickGrid"></div>
+<!-- deck preview moved to modal -->
+    <div style="display:flex;gap:10px;align-items:center;"><button class="btn btn-sm" id="previewDeckBtn" style="display:none;" onclick="if(app.game.chosenImmortal)showDeckPreview(app.game.chosenImmortal)">📖 View Deck</button><button class="btn btn-lg" id="startBtn" disabled onclick="showInitiativeRoll()">Roll for Initiative ✦</button></div>
+    <div style="height:10px;"></div>
+  </div>
+</div>
+
+<!-- ══ CATALOGUE ══ -->
+<div class="screen" id="catalogue-screen">
+  <!-- Header -->
+  <div class="cat-header">
+    <div class="cat-title">📖 Card Catalogue</div>
+    <button class="btn btn-sm" style="margin-left:auto;" onclick="go('catalogue-screen','menu-screen')">← Menu</button>
+  </div>
+  <!-- Tab bar -->
+  <div class="cat-tabs" id="catTabs">
+    <button class="cat-tab active" id="ctab-immortal"  onclick="setCatTab('immortal')">👑 Immortals</button>
+    <button class="cat-tab"        id="ctab-creature"  onclick="setCatTab('creature')">⚔ Creatures</button>
+    <button class="cat-tab"        id="ctab-rift"      onclick="setCatTab('rift')">⚡ Rift</button>
+    <button class="cat-tab"        id="ctab-magic"     onclick="setCatTab('magic')">✨ Magic</button>
+  </div>
+  <!-- Filter bar (faction + rarity) -->
+  <div class="cat-filter-bar" id="catFilterBar">
+    <div class="cat-fac-filters" id="catFacFilters"></div>
+    <div class="cat-rar-filters">
+      <span class="rar-lbl">Rarity:</span>
+      <button class="rar-btn rar-all active" onclick="setCatRar('all')">All</button>
+      <button class="rar-btn rar-bronze"     onclick="setCatRar('bronze')">⬤ Bronze</button>
+      <button class="rar-btn rar-silver"     onclick="setCatRar('silver')">⬤ Silver</button>
+      <button class="rar-btn rar-gold"       onclick="setCatRar('gold')">⬤ Gold</button>
+    </div>
+  </div>
+  <div class="cat-body" id="catBody"></div>
+</div>
+
+<!-- ══ DECK BUILDER ══ -->
+<div class="screen" id="deckbuilder-screen">
+
+  <!-- ══ STEP 1: Choose Immortal ══ -->
+  <div id="db-step1" style="display:flex;flex-direction:column;height:100vh;overflow:hidden;">
+    <div class="db-header">
+      <div>
+        <div class="db-title">⚔ Deck Builder</div>
+        <div style="font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:2px;color:var(--dim);">Choose an Immortal to start building your deck</div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:6px;align-items:center;">
+        <button class="btn btn-sm" onclick="go('deckbuilder-screen','menu-screen')">← Menu</button>
+      </div>
+    </div>
+
+    <div style="flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:14px;">
+
+      <!-- Saved decks -->
+      <div id="dbSavedStrip" style="display:none;">
+        <div class="db-sec-title">📂 Your Saved Decks</div>
+        <div id="dbSavedList" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px;"></div>
+        <div style="height:1px;background:var(--iron2);margin-top:10px;"></div>
+      </div>
+
+      <!-- Immortal filter -->
+      <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;" id="dbImFacFilters"></div>
+
+      <!-- Immortal grid -->
+      <div class="db-sec-title" id="dbImmortalLbl">— or pick a fresh Immortal —</div>
+      <div id="dbImmortals" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;max-width:960px;"></div>
+    </div>
+  </div>
+
+  <!-- ══ STEP 2: Build Deck ══ -->
+  <div id="db-step2" style="display:none;flex-direction:column;height:100vh;overflow:hidden;">
+
+    <!-- Header -->
+    <div class="db-header">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="btn btn-sm" onclick="dbGoStep1()">← Back</button>
+        <div>
+          <div class="db-title" id="dbStep2Title">Build Your Deck</div>
+          <div style="font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:2px;color:var(--dim);" id="dbStatus">—</div>
+        </div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+        <input id="dbDeckName" type="text" placeholder="Geef je deck een naam…"
+          style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:1px;background:var(--bg3);border:1px solid var(--iron2);color:var(--txt);padding:6px 10px;width:180px;outline:none;clip-path:polygon(4px 0%,100% 0%,calc(100% - 4px) 100%,0% 100%);"
+          maxlength="40">
+        <button class="btn btn-sm btn-grn" onclick="saveDeck()">💾 Save</button>
+        <button class="btn btn-sm" onclick="clearDeck()" title="Clear deck">🗑 Clear</button>
+      </div>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="db2-filterbar">
+      <div class="db2-fac-btns" id="db2FacBtns"></div>
+      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+        <input id="dbSearch" type="text" placeholder="🔍 Search cards…"
+          style="font-family:'Cinzel',serif;font-size:.58rem;background:var(--bg3);border:1px solid var(--iron2);color:var(--txt);padding:5px 10px;width:140px;outline:none;clip-path:polygon(4px 0%,100% 0%,calc(100% - 4px) 100%,0% 100%);"
+          oninput="renderDbPool()">
+        <button class="rar-btn rar-all active" id="dbRarAll"    onclick="setDbRarFilter('all')">All</button>
+        <button class="rar-btn rar-bronze"     onclick="setDbRarFilter('bronze')">⬤ Bronze</button>
+        <button class="rar-btn rar-silver"     onclick="setDbRarFilter('silver')">⬤ Silver</button>
+        <button class="rar-btn rar-gold"       onclick="setDbRarFilter('gold')">⬤ Gold</button>
+      </div>
+    </div>
+
+    <!-- Body: pool + deck list -->
+    <div class="db-layout">
+      <div class="db-center">
+        <div id="dbPool"></div>
+      </div>
+      <div class="db-right">
+        <div class="db-immortal-preview" id="dbImmortalPreview"></div>
+        <div class="db-deck-count" id="dbCount">0/40</div>
+        <div class="db-deck-sub">cards in deck</div>
+        <div id="dbDeckMsg" style="min-height:14px;font-family:'Cinzel',serif;font-size:.5rem;margin:3px 0;text-align:center;"></div>
+        <div style="height:1px;background:var(--iron2);margin-bottom:6px;"></div>
+        <div id="dbList" style="flex:1;overflow-y:auto;"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- ══ GAME ══ -->
+<div class="screen" id="game-screen">
+  <div class="top-bar">
+    <div class="ph-box">
+      <div class="ph-lbl">Phase</div>
+      <div class="ph-name" id="phaseName">—</div>
+      <div class="ph-turn" id="turnLabel">Turn 1</div>
+    </div>
+    <div class="tbar-mid">
+      <div class="arena-ttl">⚔ Soul Bound Arena ⚔</div>
+      <div class="log-inline" id="gameLog"></div>
+    </div>
+    <div class="ctrl-btns">
+      <button class="btn btn-sm" id="sacrificeBtn" onclick="sacrificeCard()" style="display:none;">Sacrifice</button>
+      <button class="btn btn-sm" onclick="go('game-screen','title-screen')" title="Back to Start Screen">⌂</button>
+      <button class="btn btn-sm btn-red" onclick="go('game-screen','menu-screen')">Forfeit</button>
+
+    </div>
+  </div>
+  <!-- dice area stub for legacy refs -->
+  <div id="diceArea" style="display:none;"></div>
+  <div class="play-area">
+    <div class="left-col">
+
+      <div class="col-hdr" style="margin-top:4px;">Foe Soul Jar</div>
+      <div class="sj-grid" id="oppSoulJars"></div>
+      <div class="col-hdr" style="margin-top:4px;border-top:1px solid var(--iron2);padding-top:4px;">Your Soul Jar</div>
+      <div class="sj-grid" id="soulJars"></div>
+      <div class="col-hdr" style="margin-top:4px;">Immortal</div>
+      <div class="im-card" id="playerImmortal" onclick="activateImmortal()">
+        <div class="im-header">
+          <div class="im-cost-badge" id="imCostBadge">5</div>
+          <div class="im-type-lbl">Immortal</div>
+        </div>
+        <div class="im-art" id="imArt">⚔️</div>
+        <div class="im-sigil"><div class="im-sigil-dot">◆</div></div>
+        <div class="im-namebar"><div class="im-name" id="imNameEl">—</div></div>
+        <div class="im-fac" id="imFacEl">—</div>
+        <div class="im-bottom">
+          <div class="im-abl-name" id="imAblName">Ability</div>
+          <div class="im-hint">Tap to activate</div>
+        </div>
+      </div>
+    </div>
+    <div class="center-col">
+      <div class="opp-area">
+        <div class="area-lbl">Adversary's Field</div>
+        <div class="opp-hand-strip" id="oppHandDisplay"></div>
+        <div class="main-slots" id="oppField"></div>
+        <div class="timer-row">
+          <div class="timer-slot" id="oppTimer_0"><span class="timer-tag">Timer</span></div>
+          <div class="timer-slot" id="oppTimer_1"><span class="timer-tag">Timer</span></div>
+        </div>
+      </div>
+      <div class="arena-centre">
+        <!-- score bar -->
+        <div class="score-bar-h">
+          <div class="sbh-player">
+            <span class="sbh-name">YOU</span>
+            <span class="sbh-val" id="p1Score">0</span>
+          </div>
+          <div class="sbh-track" id="scoreTrack"></div>
+          <div class="sbh-foe">
+            <span class="sbh-val foe" id="p2Score">0</span>
+            <span class="sbh-name">FOE</span>
+          </div>
+        </div>
+      </div>
+      <div class="player-area">
+        <div class="timer-row">
+          <div class="timer-slot" id="playerTimer_0"><span class="timer-tag">Timer</span></div>
+          <div class="timer-slot" id="playerTimer_1"><span class="timer-tag">Timer</span></div>
+        </div>
+        <div class="main-slots" id="playerField"></div>
+        <div class="area-lbl">Your Field</div>
+      </div>
+    </div>
+    <div class="right-col">
+      <div class="col-hdr">Adversary</div>
+      <div class="opp-im"><div class="opp-im-art" id="oppImArt">💀</div><div class="opp-im-name" id="oppImName">—</div></div>
+      <div class="col-hdr" style="margin-top:4px;">Foe Deck</div>
+      <div class="deck-block">
+        <div class="dk-count" id="oppDeckCount">0</div><div class="dk-lbl">cards</div>
+      </div>
+      <div class="col-hdr" style="margin-top:4px;">Foe Void</div>
+      <div class="void-block" onclick="openVoidModal(2)" title="View Adversary Void">
+        <div class="dk-count" id="oppVoidCount" style="color:var(--blood)">0</div><div class="dk-lbl">discarded</div>
+      </div>
+      <div style="height:1px;background:var(--iron2);margin:6px 0;"></div>
+      <!-- phase next button (centered in right col) -->
+      <div class="phase-row" id="phaseRow">
+        <div class="phase-pip-row" id="phasePips"></div>
+        <button class="phase-next-btn" id="phaseNextBtn" onclick="nextPhase()">
+          <span id="phaseNextLabel">Next Phase →</span>
+        </button>
+        <div class="phase-cur-lbl" id="phaseCurLbl">—</div>
+      </div>
+      <div style="height:1px;background:var(--iron2);margin:6px 0;"></div>
+      <div class="col-hdr">Your Deck</div>
+      <div class="deck-block" onclick="if(app.game.gs)app.ui.addLog('Deck: '+app.game.gs.deck[1].length+' cards.')">
+        <div class="dk-count" id="deckCount">0</div><div class="dk-lbl">cards</div>
+      </div>
+      <div class="col-hdr" style="margin-top:4px;">Your Void</div>
+      <div class="void-block" onclick="openVoidModal(1)" title="View Your Void">
+        <div class="dk-count" id="voidCount" style="color:var(--blood)">0</div><div class="dk-lbl">discarded</div>
+      </div>
+    </div>
+  </div>
+  <div class="hand-area">
+    <div class="hand-lbl">✦ Your Hand — <span id="handCount">0</span>/8 ✦</div>
+    <div class="hand-cards" id="playerHand"></div>
+  </div>
+</div>
+
+<!-- DRAW CARD ANIMATION -->
+<div id="drawCardAnim"></div>
+
+<!-- WIN -->
+<div class="overlay" id="winOverlay">
+  <div class="modal">
+    <h2 id="winTitle">Reborn!</h2>
+    <p id="winText"></p>
+    <button class="btn" onclick="document.getElementById('winOverlay').classList.remove('show');go('game-screen','menu-screen')">Return to Menu</button>
+  </div>
+</div>
+<!-- ATTACK -->
+<div class="overlay" id="atkOverlay">
+  <div class="modal">
+    <h2 id="atkTitle">Declare Attack</h2>
+    <p id="atkMsg"></p>
+    <div class="atk-tgts" id="atkTgts"></div>
+    <button class="btn btn-sm btn-red" onclick="cancelAtk()">Retreat</button>
+  </div>
+</div>
+<!-- PLACE MODE -->
+<div class="overlay" id="placeOverlay">
+  <div class="modal">
+    <h2>Place Card</h2>
+    <p id="placeCardName" style="font-size:.95rem;font-family:'Cinzel',serif;color:var(--gold);font-style:normal;margin-bottom:5px;"></p>
+    <p>Choose placement mode:</p>
+    <div style="display:flex;gap:12px;justify-content:center;margin-bottom:16px;flex-wrap:wrap;">
+      <button class="btn" onclick="confirmPlace('attack')" style="line-height:1.6;">⚔️ Attack Mode<br><span style="font-size:.6rem;opacity:.7;">Upright — Can attack</span></button>
+      <button class="btn" onclick="confirmPlace('defense')" style="line-height:1.6;">🛡 Defence Mode<br><span style="font-size:.6rem;opacity:.7;">Horizontal — Counter only</span></button>
+    </div>
+    <button class="btn btn-sm btn-red" onclick="cancelPlace()">Cancel</button>
+  </div>
+</div>
+<!-- INITIATIVE ROLL -->
+<div class="overlay" id="initiativeOverlay">
+  <div class="modal" style="max-width:460px;text-align:center;padding:32px 28px;">
+    <h2 style="font-family:'Cinzel Decorative',serif;font-size:1rem;letter-spacing:3px;margin-bottom:4px;">⚔ Roll for Initiative</h2>
+    <p style="color:var(--dim);font-size:.58rem;letter-spacing:2px;margin-bottom:28px;">Highest roll goes first. Reroll on a tie.</p>
+    <div style="display:flex;justify-content:center;gap:60px;margin-bottom:24px;align-items:flex-end;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
+        <div style="font-family:'Cinzel',serif;font-size:.55rem;color:var(--gold);letter-spacing:3px;">YOU</div>
+        <div class="init-die" id="initDie1">?</div>
+      </div>
+      <div style="font-family:'Cinzel Decorative',serif;font-size:1.4rem;color:var(--iron2);padding-bottom:12px;">VS</div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
+        <div style="font-family:'Cinzel',serif;font-size:.55rem;color:#e03030;letter-spacing:3px;">ADVERSARY</div>
+        <div class="init-die" id="initDie2">?</div>
+      </div>
+    </div>
+    <div id="initResult" style="font-family:'Cinzel',serif;font-size:.72rem;color:var(--txt);min-height:28px;margin-bottom:20px;line-height:1.6;"></div>
+    <button class="btn btn-lg" id="initRollBtn" onclick="rollInitiative()">Roll Dice</button>
+    <button class="btn btn-lg" id="initContinueBtn" onclick="initiativeDone()" style="display:none;">Enter Arena →</button>
+  </div>
+</div>
+
+<!-- DRAW OPENING HAND -->
+<div class="overlay" id="drawHandOverlay">
+  <div class="modal" style="max-width:420px;">
+    <h2 style="font-size:1rem;margin-bottom:4px;">🃏 Drawing Opening Hand</h2>
+    <p style="color:var(--dim);font-size:.55rem;margin-bottom:12px;">You draw 5 cards from your deck to begin.</p>
+    <div id="drawHandLog" style="max-height:220px;overflow-y:auto;font-family:Spectral,serif;font-size:.75rem;"></div>
+  </div>
+</div>
+
+<!-- ══ STORE OVERLAY ══ -->
+<div class="modal-overlay" id="storeOverlay" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">🏪 Store</div>
+      <button class="modal-close" onclick="document.getElementById('storeOverlay').classList.remove('show')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="text-align:center;padding:40px 20px;">
+        <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+        <div style="font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--gold2);margin-bottom:10px;">Coming Soon</div>
+        <div style="font-family:'Spectral',serif;color:var(--dim);font-size:.85rem;line-height:1.7;">
+          The store is not yet open.<br>New card packs and expansions are on their way.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CREDITS OVERLAY ══ -->
+<div class="modal-overlay" id="creditsOverlay" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">✦ Credits</div>
+      <button class="modal-close" onclick="document.getElementById('creditsOverlay').classList.remove('show')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="text-align:center;padding:20px 10px;">
+        <div style="font-family:'Cinzel Decorative',serif;font-size:1.4rem;color:var(--gold2);margin-bottom:6px;text-shadow:0 0 20px rgba(200,150,14,.5);">Studio FrozenGears</div>
+        <div style="font-family:'Spectral',serif;font-size:.75rem;color:var(--dim);letter-spacing:2px;margin-bottom:28px;">© 2024 · All Rights Reserved</div>
+        <div style="display:flex;flex-direction:column;gap:14px;max-width:300px;margin:0 auto;text-align:left;">
+          <div class="credit-row"><div class="credit-role">Game Design</div><div class="credit-name">Pim Horeman</div></div>
+          <div class="credit-row"><div class="credit-role">Illustration</div><div class="credit-name">Faye Kievit</div></div>
+          <div class="credit-row"><div class="credit-role">Card Set</div><div class="credit-name">Standard Set — English</div></div>
+        </div>
+        <div style="margin-top:28px;font-family:'IM Fell English',serif;font-style:italic;color:var(--dim);font-size:.8rem;line-height:1.8;">
+          "Between life and death,<br>souls are bound to the eternal arena."
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SETTINGS OVERLAY ══ -->
+<div class="modal-overlay" id="settingsOverlay" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">⚙️ Settings</div>
+      <button class="modal-close" onclick="document.getElementById('settingsOverlay').classList.remove('show')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;flex-direction:column;gap:0;padding:10px 0;">
+        <!-- Hover info toggle -->
+        <div class="settings-row">
+          <div class="settings-label">
+            <div class="settings-title">Hover Information</div>
+            <div class="settings-desc">Show card details when hovering (2 second delay)</div>
+          </div>
+          <button class="settings-toggle" id="hoverToggleBtn" onclick="toggleHoverInfo()">ON</button>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-row" style="opacity:.4;pointer-events:none;">
+          <div class="settings-label">
+            <div class="settings-title">Sound Effects</div>
+            <div class="settings-desc">Coming soon</div>
+          </div>
+          <button class="settings-toggle off">OFF</button>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-row" style="opacity:.4;pointer-events:none;">
+          <div class="settings-label">
+            <div class="settings-title">Animations</div>
+            <div class="settings-desc">Coming soon</div>
+          </div>
+          <button class="settings-toggle">ON</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ VOID VIEWER MODAL ══ -->
+<div class="overlay" id="voidModal" onclick="if(event.target===this)closeVoidModal()">
+  <div class="modal" style="max-width:680px;max-height:80vh;display:flex;flex-direction:column;padding:0;overflow:hidden;">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--iron2);flex-shrink:0;">
+      <div>
+        <div style="font-family:'Cinzel Decorative',serif;font-size:.85rem;letter-spacing:2px;color:var(--gold);" id="voidModalTitle">Void</div>
+        <div style="font-family:'Cinzel',serif;font-size:.52rem;color:var(--dim);letter-spacing:2px;margin-top:3px;" id="voidModalSub">Cards destroyed or sacrificed</div>
+      </div>
+      <button class="btn btn-sm" onclick="closeVoidModal()">✕ Close</button>
+    </div>
+    <div id="voidModalBody" style="overflow-y:auto;padding:16px 20px;flex:1;display:flex;flex-wrap:wrap;gap:12px;align-content:flex-start;"></div>
+  </div>
+</div>
+
+<!-- ══ DECK PREVIEW MODAL ══ -->
+<div class="overlay" id="deckPreviewModal" onclick="if(event.target===this)closeDeckPreview()">
+  <div class="modal" style="max-width:720px;max-height:82vh;display:flex;flex-direction:column;padding:0;overflow:hidden;">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--iron2);flex-shrink:0;">
+      <div>
+        <div style="font-family:'Cinzel Decorative',serif;font-size:.85rem;letter-spacing:2px;color:var(--gold);" id="dpModalTitle">Deck Preview</div>
+        <div style="font-family:'Cinzel',serif;font-size:.52rem;color:var(--dim);letter-spacing:2px;margin-top:3px;" id="dpModalSub"></div>
+      </div>
+      <button class="btn btn-sm" onclick="closeDeckPreview()">✕ Close</button>
+    </div>
+    <div id="dpModalContent" style="overflow-y:auto;padding:16px 20px;flex:1;"></div>
+  </div>
+</div>
+
+<!-- ══ PHASE ANNOUNCEMENT ══ -->
+<div id="phaseAnnounce" class="phase-announce">
+  <div class="phase-announce-inner" id="phaseAnnounceText"></div>
+</div>
+
+<!-- ══ ROLL PHASE MODAL ══ -->
+<div class="overlay" id="rollModal">
+  <div class="modal roll-modal">
+    <div class="roll-modal-header">
+      <div style="font-family:'Cinzel Decorative',serif;font-size:.9rem;letter-spacing:3px;color:var(--gold);" id="rollModalTitle">🎲 Roll for Souls</div>
+      <div style="font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:2px;color:var(--dim);margin-top:4px;" id="rollModalSub">Roll your dice · keep some · reroll the rest</div>
+    </div>
+    <div id="rollDiceDisplay" class="roll-dice-display"></div>
+    <div id="rollHint" class="roll-hint"></div>
+    <div class="roll-modal-btns">
+      <button class="btn btn-sm" id="rollBtn" onclick="rollDice()">Roll Dice</button>
+      <button class="btn btn-sm" id="rerollBtn" onclick="rerollDice()" style="display:none;">Reroll Unselected</button>
+      <button class="btn btn-sm btn-grn" id="collectBtn" onclick="collectDice()">Collect Souls</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BOT ROLL PHASE MODAL ══ -->
+<div class="overlay" id="botRollModal">
+  <div class="modal roll-modal" style="max-width:420px;">
+    <div class="roll-modal-header">
+      <div style="font-family:'Cinzel Decorative',serif;font-size:.85rem;letter-spacing:3px;color:#e03030;">🎲 Adversary Rolls for Souls</div>
+      <div style="font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:2px;color:var(--dim);margin-top:4px;" id="botRollSub">Watching the adversary gather power...</div>
+    </div>
+    <div id="botRollDiceDisplay" class="roll-dice-display"></div>
+    <div id="botRollResult" class="roll-hint" style="color:#e03030;"></div>
+  </div>
+</div>
+<script src="soulbound.js"></script>
+</body>
+</html>
