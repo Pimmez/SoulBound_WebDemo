@@ -45,7 +45,7 @@
     "abilityName": "Divine Mend",
     "desc": "All cards on your side of the field restore 2 Health, up to their maximum Health.",
     "color": "#e8b830",
-    "realArt": "art/0004Emma; The Angelic Cleric.png"
+    "realArt": "art/#0004 Emma; The Angelic Cleric.png"
   },
   {
     "id": "#0005",
@@ -57,7 +57,7 @@
     "abilityName": "Divine Shield",
     "desc": "For 1 round, all cards on your side of the field cannot have their health reduced below 1.",
     "color": "#e8b830",
-    "realArt": "art/0005Archangel Promotheus.png"
+    "realArt": "art/#0005 Archangel Promethias.png"
   },
   {
     "id": "#0006",
@@ -69,7 +69,7 @@
     "abilityName": "Heavenly Smite",
     "desc": "All cards on your side of the field gain Heavenly Smite this turn.",
     "color": "#e8b830",
-    "realArt": "art/0006KsamaTheGodWoken.png"
+    "realArt": "art/#0006 Ksama The Godwoken.png"
   },
   {
     "id": "#0007",
@@ -81,7 +81,7 @@
     "abilityName": "Predators Claim",
     "desc": "Sacrifice 1 card on your opponents field. Gain its Soul Points.",
     "color": "#3da84a",
-    "realArt": "art/0007Naga the Cunning.png"
+    "realArt": "art/#0007 Naga the Cunning.png"
   },
   {
     "id": "#0008",
@@ -93,7 +93,7 @@
     "abilityName": "Sudden Assault",
     "desc": "All creatures on your side of the field gain Sudden Assault until the start of your next turn.",
     "color": "#3da84a",
-    "realArt": "art/0008BeastRiderTlalli.png"
+    "realArt": "art/#0008 Beast Rider Tlalli.png"
   },
   {
     "id": "#0009",
@@ -105,7 +105,7 @@
     "abilityName": "Sacrifice Blessing",
     "desc": "All creatures on your side of the field that you sacrifice this turn have a +1 sacrifice bonus.",
     "color": "#3da84a",
-    "realArt": "art/0009KaluHealerOfTheSeapng.png"
+    "realArt": "art/#0009 Kalu Healer of the Sea.png"
   },
   {
     "id": "#0010",
@@ -117,7 +117,7 @@
     "abilityName": "Devouring Strike",
     "desc": "Give 1 card on your side of the field +3 attack for 1 round.",
     "color": "#d63030",
-    "realArt": "art/0010Dranic The Devourer.png"
+    "realArt": "art/#0010 Dranic The Devourer.png"
   },
   {
     "id": "#0011",
@@ -129,7 +129,7 @@
     "abilityName": "Demon Dash",
     "desc": "Give all the cards on your side of the playingfield \"Dash\".",
     "color": "#d63030",
-    "realArt": "art/0011WinglessDemonFleq.png"
+    "realArt": "art/#0011 Wingless Demon.png"
   },
   {
     "id": "#0012",
@@ -141,7 +141,7 @@
     "abilityName": "Blue Surge",
     "desc": "Give all cards on your side of the field +2 attack for this turn.",
     "color": "#5baeff",
-    "realArt": "art/0012BeacoreTheBlue.png"
+    "realArt": "art/#0012 Beacore The Blue.png"
   },
   {
     "id": "#0013",
@@ -153,7 +153,7 @@
     "abilityName": "Void Hand",
     "desc": "Send a card from your opponents hand of your choosing to the void.",
     "color": "#c94f8a",
-    "realArt": "art/0013Isabella; Witch of the void.png"
+    "realArt": "art/#0013 Isabella; Witch of the Void.png"
   },
   {
     "id": "#0014",
@@ -165,7 +165,7 @@
     "abilityName": "Dark Ritual",
     "desc": "Give all the cards on your side of the field \"Dark Ritual\".",
     "color": "#c94f8a",
-    "realArt": "art/0014TheFoulOne.png"
+    "realArt": "art/#0014 The Foul One.png"
   },
   {
     "id": "#0015",
@@ -177,7 +177,7 @@
     "abilityName": "Mistress Return",
     "desc": "Choose 1 card from your opponents playingfield and return it to their hand.",
     "color": "#c94f8a",
-    "realArt": "art/0015HornedMistressDiabel.png"
+    "realArt": "art/#0015 Horned Mistress Diabel.png"
   },
   {
     "id": "#0016",
@@ -189,7 +189,7 @@
     "abilityName": "Undead Menace",
     "desc": "At the end of this round, return each creature you control that was destroyed to your hand.",
     "color": "#8e3fe0",
-    "realArt": "art/0016FredariqTheUndead.png"
+    "realArt": "art/#0016 Fredariq the Undead.png"
   },
   {
     "id": "#0017",
@@ -201,7 +201,7 @@
     "abilityName": "Vampiric Grace",
     "desc": "Give all cards on your side of the field \"Eternal Torment\".",
     "color": "#8e3fe0",
-    "realArt": "art/0017VampireLordSilas.png"
+    "realArt": "art/#0017 Vampire Lord Silas.png"
   },
   {
     "id": "#0018",
@@ -213,7 +213,7 @@
     "abilityName": "Eternal Hand",
     "desc": "Grab the top card from the void and put it back into your deck, then shuffle your deck and draw 1 card.",
     "color": "#8e3fe0",
-    "realArt": "art/0018WanderingGhostOfTheVale.png"
+    "realArt": "art/#0018 Wandering Ghost of the Vale.png"
   },
   {
     "id": "#0019",
@@ -226,7 +226,7 @@
     "abilityName": "Secret Spell",
     "desc": "Remove an effect/ability from a creature card on the playingfield",
     "color": "#e8b830",
-    "realArt": "art/0019.AnarielMessengerOfTheOldOnes.png"
+    "realArt": "art/#0019 Anariel; Messenger of The Old Ones.png"
   },
   {
     "id": "#0020",
@@ -239,7 +239,7 @@
     "abilityName": "Lunar Conversion",
     "desc": "Cards from the \"Beast\" faction that you control on your side of the playingfield, become \"Pure\" faction cards and get a \"+1\" to their sacrifice stat for this turn.",
     "color": "#3da84a",
-    "realArt": "art/0020Lunaris The Silver Beast.png"
+    "realArt": "art/#0020 Lunaris The Silver Beast.png"
   },
   {
     "id": "#0021",
@@ -252,7 +252,7 @@
     "abilityName": "Blue Flame",
     "desc": "Whenever a \"Pure\" faction creature you control is destroyed this round, summon an \"infernal\" creature with cost 3 or less from your deck.",
     "color": "#3da84a",
-    "realArt": "art/0021EldrianaTheCleansingFlame.png"
+    "realArt": "art/#0021 Eldriana; The Cleansing Flame.png"
   },
   {
     "id": "#0022",
@@ -265,7 +265,7 @@
     "abilityName": "Mirrored Conversion",
     "desc": "Choose a player. Place all cards in your hand into the void, shuffle, then draw that many cards.",
     "color": "#3da84a",
-    "realArt": "art/0022ZirithOfTheMirrorWays.png"
+    "realArt": "art/#0022 Zirith of The Mirror Ways.png"
   },
   {
     "id": "#0023",
@@ -278,7 +278,7 @@
     "abilityName": "Soul Stealer",
     "desc": "During your turn, steal 1 soul from your opponent\"s soul jar for each \"cursed\" or \"pure\" creature on the field.",
     "color": "#3da84a",
-    "realArt": "art/0023ViseraStealerofSouls.png"
+    "realArt": "art/#0023 Visara Stealer of Souls.png"
   },
   {
     "id": "#0028",
@@ -291,7 +291,20 @@
     "abilityName": "Raging Bull",
     "desc": "Choose a creature you control. It gains \"Burning Cloak\".",
     "color": "#3da84a",
-    "realArt": "art/0028BrassenBullseye.png"
+    "realArt": "art/#0028 Brassen Bullseye.png"
+  },
+  {
+    "id": "#0030",
+    "name": "Zelakoree",
+    "factions": [
+      "beast",
+      "cursed"
+    ],
+    "souls": 7,
+    "abilityName": "Zee Zaa",
+    "desc": "Whenever a ‘Beast’ faction creature you control dies this round, return it to the field as a ‘Cursed’ creature with 1 Attack and 1 Health.",
+    "color": "#c94f8a",
+    "realArt": "art/#0030 Zelakoree.png"
   },
   {
     "id": "#0031",
@@ -304,7 +317,7 @@
     "abilityName": "Corrupt Dominion",
     "desc": "All enemy creatures lose 2 attack this turn. For each enemy creature destroyed this way, gain 1 Tainted or Infernal soul.",
     "color": "#c94f8a",
-    "realArt": "art/0031Xorath The Corrupt Statue.png"
+    "realArt": "art/#0031 Xorath The Corrupt Statue.png"
   },
   {
     "id": "#0032",
@@ -317,7 +330,7 @@
     "abilityName": "Corrupt Dominion",
     "desc": "For 1 turn, whenever a creature you control dies, deal 2 damage to a creature your opponent controls.",
     "color": "#d63030",
-    "realArt": "art/0032MalceronTheBurned.png"
+    "realArt": "art/#0032 Malceron The Burned.png"
   },
   {
     "id": "#0033",
@@ -330,6 +343,6 @@
     "abilityName": "Unholy Seal",
     "desc": "Your opponents Immortal card cannot be used this round and next round the cost is +1.",
     "color": "#8e3fe0",
-    "realArt": "art/0033MorvathTheUnholyRevanent.png"
+    "realArt": "art/#0033 Morvath The Unholy Revenant.png"
   }
 ]
