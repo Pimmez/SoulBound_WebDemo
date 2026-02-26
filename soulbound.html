@@ -283,46 +283,56 @@
       <button class="btn btn-sm" id="sacrificeBtn" onclick="sacrificeCard()" style="display:none;">Sacrifice</button>
       <button class="btn btn-sm" onclick="go('game-screen','title-screen')" title="Back to Start Screen">⌂</button>
       <button class="btn btn-sm btn-red" onclick="go('game-screen','menu-screen')">Forfeit</button>
-
     </div>
   </div>
   <!-- dice area stub for legacy refs -->
   <div id="diceArea" style="display:none;"></div>
   <div class="play-area">
+    <!-- LEFT SIDEBAR — Foe resources (mirrored: Deck+Void top, Soul Jar below, spacer bottom) -->
     <div class="left-col">
-
-      <div class="col-hdr" style="margin-top:4px;">Foe Soul Jar</div>
+      <div class="col-hdr">Foe Deck</div>
+      <div class="deck-block">
+        <div class="dk-count" id="oppDeckCount">0</div><div class="dk-lbl">cards</div>
+      </div>
+      <div class="col-hdr" style="margin-top:4px;">Foe Void</div>
+      <div class="void-block" onclick="openVoidModal(2)" title="View Adversary Void">
+        <div class="dk-count" id="oppVoidCount" style="color:var(--blood)">0</div><div class="dk-lbl">discarded</div>
+      </div>
+      <div class="sidebar-sep"></div>
+      <div class="col-hdr">Foe Soul Jar</div>
       <div class="sj-grid" id="oppSoulJars"></div>
-      <div class="col-hdr" style="margin-top:4px;border-top:1px solid var(--iron2);padding-top:4px;">Your Soul Jar</div>
-      <div class="sj-grid" id="soulJars"></div>
-      <div class="col-hdr" style="margin-top:4px;">Immortal</div>
-      <div class="im-card" id="playerImmortal" onclick="activateImmortal()">
-        <div class="im-header">
-          <div class="im-cost-badge" id="imCostBadge">5</div>
-          <div class="im-type-lbl">Immortal</div>
-        </div>
-        <div class="im-art" id="imArt">⚔️</div>
-        <div class="im-sigil"><div class="im-sigil-dot">◆</div></div>
-        <div class="im-namebar"><div class="im-name" id="imNameEl">—</div></div>
-        <div class="im-fac" id="imFacEl">—</div>
-        <div class="im-bottom">
-          <div class="im-abl-name" id="imAblName">Ability</div>
-          <div class="im-hint">Tap to activate</div>
-        </div>
-      </div>
+      <div class="sidebar-spacer"></div>
     </div>
+
+    <!-- CENTER — Battlefield -->
     <div class="center-col">
-      <div class="opp-area">
-        <div class="area-lbl">Adversary's Field</div>
-        <div class="opp-hand-strip" id="oppHandDisplay"></div>
-        <div class="main-slots" id="oppField"></div>
-        <div class="timer-row">
-          <div class="timer-slot" id="oppTimer_0"><span class="timer-tag">Timer</span></div>
-          <div class="timer-slot" id="oppTimer_1"><span class="timer-tag">Timer</span></div>
+      <!-- FOE HERO BAR -->
+      <div class="hero-bar foe-hero-bar">
+        <div class="hero-portrait foe-portrait">
+          <div class="opp-im"><div class="opp-im-art" id="oppImArt">💀</div></div>
+        </div>
+        <div class="hero-info">
+          <div class="hero-name" id="oppImName">Adversary</div>
         </div>
       </div>
+
+      <!-- FOE HAND — centered row -->
+      <div class="opp-hand-row">
+        <div class="opp-hand-strip" id="oppHandDisplay"></div>
+      </div>
+
+      <!-- FOE FIELD -->
+      <div class="battlefield-half foe-half">
+        <div class="field-row">
+          <div class="timer-slot timer-left" id="oppTimer_0"><span class="timer-tag">Timer</span></div>
+          <div class="main-slots" id="oppField"></div>
+          <div class="timer-slot timer-right" id="oppTimer_1"><span class="timer-tag">Timer</span></div>
+        </div>
+      </div>
+
+      <!-- CENTER DIVIDER — Score bar -->
       <div class="arena-centre">
-        <!-- score bar -->
+        <div class="arena-divider-line"></div>
         <div class="score-bar-h">
           <div class="sbh-player">
             <span class="sbh-name">YOU</span>
@@ -334,44 +344,62 @@
             <span class="sbh-name">FOE</span>
           </div>
         </div>
+        <div class="arena-divider-line"></div>
       </div>
-      <div class="player-area">
-        <div class="timer-row">
-          <div class="timer-slot" id="playerTimer_0"><span class="timer-tag">Timer</span></div>
-          <div class="timer-slot" id="playerTimer_1"><span class="timer-tag">Timer</span></div>
+
+      <!-- PLAYER FIELD -->
+      <div class="battlefield-half player-half">
+        <div class="field-row">
+          <div class="timer-slot timer-left" id="playerTimer_0"><span class="timer-tag">Timer</span></div>
+          <div class="main-slots" id="playerField"></div>
+          <div class="timer-slot timer-right" id="playerTimer_1"><span class="timer-tag">Timer</span></div>
         </div>
-        <div class="main-slots" id="playerField"></div>
-        <div class="area-lbl">Your Field</div>
+      </div>
+
+      <!-- PLAYER HERO BAR -->
+      <div class="hero-bar player-hero-bar">
+        <div class="hero-portrait player-portrait">
+          <div class="im-card" id="playerImmortal" onclick="activateImmortal()">
+            <div class="im-header">
+              <div class="im-cost-badge" id="imCostBadge">5</div>
+              <div class="im-type-lbl">Immortal</div>
+            </div>
+            <div class="im-art" id="imArt">⚔️</div>
+            <div class="im-sigil"><div class="im-sigil-dot">◆</div></div>
+            <div class="im-namebar"><div class="im-name" id="imNameEl">—</div></div>
+            <div class="im-fac" id="imFacEl">—</div>
+            <div class="im-bottom">
+              <div class="im-abl-name" id="imAblName">Ability</div>
+              <div class="im-hint">Tap to activate</div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-info player-info-section">
+          <!-- Phase controls inline -->
+          <div class="phase-row" id="phaseRow">
+            <div class="phase-pip-row" id="phasePips"></div>
+            <button class="phase-next-btn" id="phaseNextBtn" onclick="nextPhase()">
+              <span id="phaseNextLabel">Next Phase →</span>
+            </button>
+            <div class="phase-cur-lbl" id="phaseCurLbl">—</div>
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- RIGHT SIDEBAR — Player resources (Soul Jar top, Void+Deck clustered at bottom) -->
     <div class="right-col">
-      <div class="col-hdr">Adversary</div>
-      <div class="opp-im"><div class="opp-im-art" id="oppImArt">💀</div><div class="opp-im-name" id="oppImName">—</div></div>
-      <div class="col-hdr" style="margin-top:4px;">Foe Deck</div>
-      <div class="deck-block">
-        <div class="dk-count" id="oppDeckCount">0</div><div class="dk-lbl">cards</div>
-      </div>
-      <div class="col-hdr" style="margin-top:4px;">Foe Void</div>
-      <div class="void-block" onclick="openVoidModal(2)" title="View Adversary Void">
-        <div class="dk-count" id="oppVoidCount" style="color:var(--blood)">0</div><div class="dk-lbl">discarded</div>
-      </div>
-      <div style="height:1px;background:var(--iron2);margin:6px 0;"></div>
-      <!-- phase next button (centered in right col) -->
-      <div class="phase-row" id="phaseRow">
-        <div class="phase-pip-row" id="phasePips"></div>
-        <button class="phase-next-btn" id="phaseNextBtn" onclick="nextPhase()">
-          <span id="phaseNextLabel">Next Phase →</span>
-        </button>
-        <div class="phase-cur-lbl" id="phaseCurLbl">—</div>
-      </div>
-      <div style="height:1px;background:var(--iron2);margin:6px 0;"></div>
-      <div class="col-hdr">Your Deck</div>
-      <div class="deck-block" onclick="if(app.game.gs)app.ui.addLog('Deck: '+app.game.gs.deck[1].length+' cards.')">
-        <div class="dk-count" id="deckCount">0</div><div class="dk-lbl">cards</div>
-      </div>
-      <div class="col-hdr" style="margin-top:4px;">Your Void</div>
+      <div class="sidebar-spacer"></div>
+      <div class="col-hdr">Your Soul Jar</div>
+      <div class="sj-grid" id="soulJars"></div>
+      <div class="sidebar-sep"></div>
+      <div class="col-hdr">Your Void</div>
       <div class="void-block" onclick="openVoidModal(1)" title="View Your Void">
         <div class="dk-count" id="voidCount" style="color:var(--blood)">0</div><div class="dk-lbl">discarded</div>
+      </div>
+      <div class="col-hdr" style="margin-top:4px;">Your Deck</div>
+      <div class="deck-block" onclick="if(app.game.gs)app.ui.addLog('Deck: '+app.game.gs.deck[1].length+' cards.')">
+        <div class="dk-count" id="deckCount">0</div><div class="dk-lbl">cards</div>
       </div>
     </div>
   </div>

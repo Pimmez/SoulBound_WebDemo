@@ -1073,16 +1073,15 @@ body::after {
 .play-area {
   flex:1;
   display:grid;
-  grid-template-columns:112px 1fr 92px;
+  grid-template-columns:90px 1fr 90px;
   overflow:hidden;
   min-height:0;
 }
 
-/* Left sidebar — iron command panel */
-.left-col {
-  background: linear-gradient(180deg, var(--bg3) 0%, var(--bg2) 100%);
-  border-right:2px solid var(--iron2);
-  padding:6px 5px;
+/* ── Sidebars — narrow resource panels ── */
+.left-col, .right-col {
+  background: linear-gradient(180deg, rgba(15,12,20,.95) 0%, rgba(10,8,14,.98) 100%);
+  padding:8px 5px;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -1090,6 +1089,8 @@ body::after {
   overflow-y:auto;
   position:relative;
 }
+.left-col { border-right:2px solid var(--iron2); }
+.right-col { border-left:2px solid var(--iron2); }
 .left-col::after {
   content:'';
   position:absolute;
@@ -1241,50 +1242,176 @@ body::after {
 .im-hint { font-size:.25rem; color:var(--parch2); font-style:italic; text-align:center; }
 
 /* ── CENTER BATTLEFIELD ── */
-.center-col { display:flex; flex-direction:column; overflow:hidden; }
+.center-col {
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(40,30,20,.3) 0%, transparent 70%),
+    linear-gradient(180deg, rgba(25,15,10,.6) 0%, rgba(15,12,18,.2) 30%, rgba(15,12,18,.2) 70%, rgba(10,20,40,.4) 100%),
+    var(--bg);
+}
 
-/* Battlefield areas */
-.opp-area {
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(120,20,20,.08) 0%, transparent 60%),
-    var(--bg);
-  border-bottom:1px solid var(--iron2);
-  padding:5px 6px;
-  display:flex; flex-direction:column;
-  gap:4px; flex:1;
+/* ── Hero Bars — Hearthstone-style hero portraits flanking the field ── */
+.hero-bar {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:4px 12px;
+  flex-shrink:0;
 }
-.player-area {
-  padding:5px 6px;
-  display:flex; flex-direction:column;
-  gap:4px; flex:1;
-  background:
-    radial-gradient(ellipse at 50% 100%, rgba(20,60,120,.05) 0%, transparent 60%),
-    var(--bg);
+.foe-hero-bar {
+  background: linear-gradient(180deg, rgba(80,15,15,.15) 0%, transparent 100%);
+  border-bottom:1px solid rgba(120,20,20,.2);
 }
-.area-lbl {
+.player-hero-bar {
+  background: linear-gradient(0deg, rgba(20,50,100,.12) 0%, transparent 100%);
+  border-top:1px solid rgba(40,80,160,.15);
+}
+
+/* Hero portrait — circular frame like Hearthstone */
+.hero-portrait {
+  width:64px;
+  height:64px;
+  border-radius:50%;
+  border:2px solid var(--iron3);
+  overflow:hidden;
+  flex-shrink:0;
+  background:var(--bg3);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  box-shadow:0 0 12px rgba(0,0,0,.5), inset 0 0 8px rgba(0,0,0,.3);
+}
+.foe-portrait {
+  border-color:rgba(180,40,40,.5);
+  box-shadow:0 0 12px rgba(120,20,20,.3), inset 0 0 8px rgba(0,0,0,.3);
+}
+.foe-portrait .opp-im { width:100%; height:100%; }
+.foe-portrait .opp-im-art {
+  width:100% !important;
+  height:100% !important;
+  font-size:1.5rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.player-portrait {
+  width:72px;
+  height:72px;
+  border-radius:12px;
+  border-color:rgba(200,150,14,.4);
+  box-shadow:0 0 15px rgba(200,150,14,.15), inset 0 0 8px rgba(0,0,0,.3);
+}
+.player-portrait .im-card {
+  width:100%;
+  height:100%;
+  margin:0;
+  border:none;
+  border-radius:10px;
+  min-height:unset;
+}
+
+.hero-info {
+  flex:1;
+  min-width:0;
+}
+.hero-name {
   font-family:'Cinzel',serif;
-  font-size:.46rem;
-  letter-spacing:3px;
+  font-size:.58rem;
+  letter-spacing:2px;
   color:var(--dim);
   text-transform:uppercase;
-  text-align:center;
+  margin-bottom:2px;
+}
+
+/* ── Battlefield halves — card rows ── */
+.battlefield-half {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  padding:4px 8px;
+  min-height:0;
+}
+.foe-half {
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(120,20,20,.06) 0%, transparent 60%);
+}
+.player-half {
+  background:
+    radial-gradient(ellipse at 50% 70%, rgba(40,80,160,.04) 0%, transparent 60%);
+}
+
+/* ── Center divider — golden score strip ── */
+.arena-centre {
+  display:flex;
+  align-items:center;
+  gap:0;
+  padding:0;
+  position:relative;
+  z-index:2;
+  flex-shrink:0;
+}
+.arena-divider-line {
+  flex:1;
+  height:1px;
+  background:linear-gradient(90deg, transparent, var(--gold), rgba(200,150,14,.6), var(--gold), transparent);
+  opacity:.4;
+}
+
+/* Sidebar separator */
+.sidebar-sep {
+  height:1px;
+  background:var(--iron2);
+  margin:4px 0;
+  width:100%;
+}
+/* Flex spacer — pushes remaining sidebar content to the bottom */
+.sidebar-spacer {
+  flex:1;
+  min-height:4px;
 }
 
 /* Opponent hand mini-cards (back face) */
 .opp-hand-strip { display:flex; gap:3px; justify-content:center; }
+.opp-hand-row {
+  display:flex;
+  justify-content:center;
+  padding:2px 8px;
+  flex-shrink:0;
+}
 .card-back-mini {
-  width:22px; height:32px;
+  width:79px; height:115px;
   background: linear-gradient(160deg, var(--iron2) 0%, var(--iron) 100%);
   border:1px solid var(--iron3);
-  clip-path: polygon(3px 0%, 100% 0%, calc(100% - 3px) 100%, 0% 100%);
+  border-radius:3px;
   display:flex; align-items:center; justify-content:center;
   font-size:.42rem;
   color:var(--iron3);
+  overflow:hidden;
 }
-.card-back-mini::after { content:'⚔'; }
 
-.main-slots { display:flex; gap:5px; justify-content:center; flex-wrap:wrap; }
+.main-slots { display:flex; gap:5px; justify-content:center; flex-wrap:wrap; flex:1; }
 .timer-row { display:flex; gap:8px; justify-content:center; }
+
+/* Field row — timers flanking the card slots with offset */
+.field-row {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:0;
+  width:100%;
+}
+.timer-left {
+  margin-right:20px;
+}
+.timer-right {
+  margin-left:20px;
+}
 
 /* Arena divider */
 .arena-div {
@@ -1346,14 +1473,14 @@ body::after {
 .timer-tag { font-family:'Cinzel',serif; font-size:.4rem; letter-spacing:1px; color:var(--iron3); text-transform:uppercase; }
 
 /* Right sidebar */
-.right-col {
-  background: linear-gradient(180deg, var(--bg3) 0%, var(--bg2) 100%);
-  border-left:2px solid var(--iron2);
-  padding:6px 5px;
-  display:flex; flex-direction:column;
-  align-items:center;
-  gap:6px;
-  overflow-y:auto;
+/* Right-col glow border */
+.right-col::before {
+  content:'';
+  position:absolute;
+  top:0; left:-1px; bottom:0;
+  width:1px;
+  background:linear-gradient(180deg, transparent, var(--flame), var(--gold), var(--flame), transparent);
+  opacity:.25;
 }
 
 /* Deck & void blocks */
@@ -1497,7 +1624,7 @@ body::after {
 
 /* ── MOBILE ── */
 @media(max-width:600px) {
-  .play-area { grid-template-columns:88px 1fr 70px; }
+  .play-area { grid-template-columns:70px 1fr 70px; }
   .card, .card-slot { width:70px; height:100px; }
   .c-art { font-size:1.3rem; }
   .db-layout { grid-template-columns:1fr; }
@@ -2377,9 +2504,9 @@ body::after {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 6px 12px;
-  background: linear-gradient(90deg, rgba(20,15,10,.0) 0%, rgba(20,15,10,.6) 40%, rgba(20,15,10,.6) 60%, rgba(20,15,10,.0) 100%);
-  width: 100%;
+  padding: 5px 16px;
+  background: linear-gradient(90deg, transparent 0%, rgba(20,15,10,.7) 20%, rgba(20,15,10,.7) 80%, transparent 100%);
+  flex-shrink:0;
 }
 .sbh-player, .sbh-foe {
   display: flex;
@@ -2428,25 +2555,17 @@ body::after {
 }
 
 /* ══ ARENA CENTRE STRIP ══ */
-.arena-centre {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 0;
-  position: relative;
-  z-index: 2;
-}
+/* Handled above in .arena-centre */
 
 /* ══ PHASE ROW ══ */
 .phase-row {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 8px 4px;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 2px 0;
   width: 100%;
+  flex-wrap:wrap;
 }
 .phase-pip-row {
   display: flex;
