@@ -281,6 +281,58 @@
     "realArt": "art/#0023 Visara Stealer of Souls.png"
   },
   {
+    "id": "#0024",
+    "name": "Elyra; Sylph of the forest",
+    "factions": [
+      "divine",
+      "beast"
+    ],
+    "souls": 5,
+    "abilityName": "Forest Powers",
+    "desc": "At the end of this round, reset all ‘Beast’ creatures you control to their base stats. Return 1 card you control to your hand.",
+    "color": "#3da84a",
+    "realArt": "art/#0024 Elyra; Sylph of the forest.png"
+  },
+  {
+    "id": "#0025",
+    "name": "Zaldaris; The Angelic Scourge",
+    "factions": [
+      "divine",
+      "infernal"
+    ],
+    "souls": 6,
+    "abilityName": "Scourge",
+    "desc": "Choose a card. Deal damage to it equal to the number of cards in play, or restore Health equal to that number.",
+    "color": "#3da84a",
+    "realArt": "art/#0025 Zaldaris; The Angelic Scourge.png"
+  },
+  {
+    "id": "#0026",
+    "name": "Selabeth The Angel of Deceit",
+    "factions": [
+      "divine",
+      "tainted"
+    ],
+    "souls": 6,
+    "abilityName": "Angels Deceit",
+    "desc": "All the creatures on your side of the field lose 1 health but gain 2 attack for this turn.",
+    "color": "#3da84a",
+    "realArt": "art/#0026 Selabeth The Angel of Deceit.png"
+  },
+  {
+    "id": "#0027",
+    "name": "Azreal The Lost Wanderer",
+    "factions": [
+      "divine",
+      "cursed"
+    ],
+    "souls": 5,
+    "abilityName": "Divine Resolution",
+    "desc": "Place your hand and void back into your deck, shuffle your deck and draw 5 cards.",
+    "color": "#3da84a",
+    "realArt": "art/#0027 Azreal The Lost Wanderer.png"
+  },
+  {
     "id": "#0028",
     "name": "Brassen Bullseye",
     "factions": [
@@ -292,6 +344,19 @@
     "desc": "Choose a creature you control. It gains \"Burning Cloak\".",
     "color": "#3da84a",
     "realArt": "art/#0028 Brassen Bullseye.png"
+  },
+  {
+    "id": "#0029",
+    "name": "Vorgren The Beast Tamer",
+    "factions": [
+      "beast",
+      "tainted"
+    ],
+    "souls": 5,
+    "abilityName": "Whip Slash",
+    "desc": "Target one creature on your opponents side of the playingfield, for this turn, every attack that targets that creature deals “1” extra bonus damage.",
+    "color": "#3da84a",
+    "realArt": "art/#0029 Vorgren The Beast Tamer.png"
   },
   {
     "id": "#0030",

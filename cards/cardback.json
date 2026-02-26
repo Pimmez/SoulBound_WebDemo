@@ -1,0 +1,7 @@
+{
+  "name": "Soul Bound Standard",
+  "image": "art/cardback.png",
+  "fallbackGradient": "linear-gradient(160deg, #1a1428 0%, #0d0a14 50%, #1a1428 100%)",
+  "fallbackIcon": "⚔",
+  "borderColor": "#3a3050"
+}
