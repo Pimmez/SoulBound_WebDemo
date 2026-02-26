@@ -1,0 +1,58 @@
+[
+  {
+    "id": "pure",
+    "name": "Pure",
+    "color": "#4a9eff",
+    "glow": "rgba(74,158,255,.4)",
+    "icon": "💧",
+    "desc": "Balanced. Rich in Magic & Artefacts."
+  },
+  {
+    "id": "tainted",
+    "name": "Tainted",
+    "color": "#d45b9e",
+    "glow": "rgba(212,91,158,.4)",
+    "icon": "☠️",
+    "desc": "Reanimation. Sacrifice combos. Debuffs."
+  },
+  {
+    "id": "divine",
+    "name": "Divine",
+    "color": "#f0c040",
+    "glow": "rgba(240,192,64,.4)",
+    "icon": "✨",
+    "desc": "Healing. Powerful Magic Cards."
+  },
+  {
+    "id": "infernal",
+    "name": "Infernal",
+    "color": "#e03030",
+    "glow": "rgba(224,48,48,.4)",
+    "icon": "🔥",
+    "desc": "High damage. Aggressive. Low magic."
+  },
+  {
+    "id": "beast",
+    "name": "Beast",
+    "color": "#4aaa55",
+    "glow": "rgba(74,170,85,.4)",
+    "icon": "🐉",
+    "desc": "Sacrifice. High cost — high power."
+  },
+  {
+    "id": "cursed",
+    "name": "Cursed",
+    "color": "#9a4aee",
+    "glow": "rgba(154,74,238,.4)",
+    "icon": "🌀",
+    "desc": "Abilities. Timer card synergy."
+  },
+  {
+    "id": "neutral",
+    "name": "Neutral",
+    "color": "#9a9a8a",
+    "glow": "rgba(154,154,138,.4)",
+    "icon": "⚪",
+    "desc": "Available to any deck. No specific faction soul cost."
+  }
+]

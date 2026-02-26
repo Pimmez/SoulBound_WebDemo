@@ -1,384 +1,80 @@
-const FACTIONS = [
-    { id: 'pure', name: 'Pure', color: '#4a9eff', glow: 'rgba(74,158,255,.4)', icon: '💧', desc: 'Balanced. Rich in Magic & Artefacts.' },
-    { id: 'tainted', name: 'Tainted', color: '#d45b9e', glow: 'rgba(212,91,158,.4)', icon: '☠️', desc: 'Reanimation. Sacrifice combos. Debuffs.' },
-    { id: 'divine', name: 'Divine', color: '#f0c040', glow: 'rgba(240,192,64,.4)', icon: '✨', desc: 'Healing. Powerful Magic Cards.' },
-    { id: 'infernal', name: 'Infernal', color: '#e03030', glow: 'rgba(224,48,48,.4)', icon: '🔥', desc: 'High damage. Aggressive. Low magic.' },
-    { id: 'beast', name: 'Beast', color: '#4aaa55', glow: 'rgba(74,170,85,.4)', icon: '🐉', desc: 'Sacrifice. High cost — high power.' },
-    { id: 'cursed', name: 'Cursed', color: '#9a4aee', glow: 'rgba(154,74,238,.4)', icon: '🌀', desc: 'Abilities. Timer card synergy.' },
-    { id: 'neutral', name: 'Neutral', color: '#9a9a8a', glow: 'rgba(154,154,138,.4)', icon: '⚪', desc: 'Available to any deck. No specific faction soul cost.' },
-];
+// ═══════════════════════════════════════════════════════════════════
+//  CARD DATA — loaded from JSON files via CardLoader
+//  To add new cards: edit the JSON files in /cards folder
+// ═══════════════════════════════════════════════════════════════════
 
-// Immortals: factions array = which soul types power this leader & which faction cards can be used
-const IMMORTALS = [
-    {
-        id: '#0001', name: 'Nero; The Old King',
-        factions: ['pure'],
-        souls: 3,
-        abilityName: 'Royal Command',
-        desc: 'All the cards on the opponents side of the field go into the attack stand for this turn.',
-        color: '#5baeff',
-        realArt: 'art/0001NeroTheOldKing.png'
-    },
-    {
-        id: '#0002', name: 'Military Commander Otren',
-        factions: ['pure'],
-        souls: 3,
-        abilityName: 'Tactical Suppression',
-        desc: 'Give all the cards on your opponents side of the playingfield -1 attack for this turn.',
-        color: '#5baeff',
-        realArt: 'art/0002MilitaryCommanderOtren.png'
-    },
-    {
-        id: '#0003', name: 'Nymph of the Reef',
-        factions: ['pure'],
-        souls: 4,
-        abilityName: 'Soul Harvest',
-        desc: 'For every card (opponent included) that you destroy this turn, you get 1 soul of your choice back into the soul jar.',
-        color: '#5baeff',
-        realArt: 'art/0003Nymph of the reef.png'
-    },
-    {
-        id: '#0004', name: 'Emma; The Angelic Cleric',
-        factions: ['divine'],
-        souls: 4,
-        abilityName: 'Divine Mend',
-        desc: 'All cards on your side of the field restore 2 Health, up to their maximum Health.',
-        color: '#e8b830',
-        realArt: 'art/0004Emma; The Angelic Cleric.png'
-    },
-    {
-        id: '#0005', name: 'Archangel Promethias',
-        factions: ['divine'],
-        souls: 4,
-        abilityName: 'Divine Shield',
-        desc: 'For 1 round, all cards on your side of the field cannot have their health reduced below 1.',
-        color: '#e8b830',
-        realArt: 'art/0005Archangel Promotheus.png'
-    },
-    {
-        id: '#0006', name: 'Ksama The Godwoken',
-        factions: ['divine'],
-        souls: 5,
-        abilityName: 'Heavenly Smite',
-        desc: 'All cards on your side of the field gain Heavenly Smite this turn.',
-        color: '#e8b830',
-        realArt: 'art/0006KsamaTheGodWoken.png'
-    },
-    {
-        id: '#0007', name: 'Naga the Cunning',
-        factions: ['beast'],
-        souls: 5,
-        abilityName: 'Predators Claim',
-        desc: 'Sacrifice 1 card on your opponents field. Gain its Soul Points.',
-        color: '#3da84a',
-        realArt: 'art/0007Naga the Cunning.png'
-    },
-    {
-        id: '#0008', name: 'Beast Rider Tlalli',
-        factions: ['beast'],
-        souls: 3,
-        abilityName: 'Sudden Assault',
-        desc: 'All creatures on your side of the field gain Sudden Assault until the start of your next turn.',
-        color: '#3da84a',
-        realArt: 'art/0008BeastRiderTlalli.png'
-    },
-    {
-        id: '#0009', name: 'Kalu Healer of the Sea',
-        factions: ['beast'],
-        souls: 3,
-        abilityName: 'Sacrifice Blessing',
-        desc: 'All creatures on your side of the field that you sacrifice this turn have a +1 sacrifice bonus.',
-        color: '#3da84a',
-        realArt: 'art/0009KaluHealerOfTheSeapng.png'
-    },
-    {
-        id: '#0010', name: 'Dranic The Devourer',
-        factions: ['infernal'],
-        souls: 4,
-        abilityName: 'Devouring Strike',
-        desc: 'Give 1 card on your side of the field +3 attack for 1 round.',
-        color: '#d63030',
-        realArt: 'art/0010Dranic The Devourer.png'
-    },
-    {
-        id: '#0011', name: 'Wingless Demon Fleq',
-        factions: ['infernal'],
-        souls: 4,
-        abilityName: 'Demon Dash',
-        desc: 'Give all the cards on your side of the playingfield "Dash".',
-        color: '#d63030',
-        realArt: 'art/0011WinglessDemonFleq.png'
-    },
-    {
-        id: '#0012', name: 'Beacore The Blue',
-        factions: ['infernal'],
-        souls: 6,
-        abilityName: 'Blue Surge',
-        desc: 'Give all cards on your side of the field +2 attack for this turn.',
-        color: '#5baeff',
-        realArt: 'art/0012BeacoreTheBlue.png'
-    },
-    {
-        id: '#0013', name: 'Isabella; Witch of the Void',
-        factions: ['tainted'],
-        souls: 3,
-        abilityName: 'Void Hand',
-        desc: 'Send a card from your opponents hand of your choosing to the void.',
-        color: '#c94f8a',
-        realArt: 'art/0013Isabella; Witch of the void.png'
-    },
-    {
-        id: '#0014', name: 'The Foul One',
-        factions: ['tainted'],
-        souls: 6,
-        abilityName: 'Dark Ritual',
-        desc: 'Give all the cards on your side of the field "Dark Ritual".',
-        color: '#c94f8a',
-        realArt: 'art/0014TheFoulOne.png'
-    },
-    {
-        id: '#0015', name: 'Horned Mistress Diabel',
-        factions: ['tainted'],
-        souls: 5,
-        abilityName: 'Mistress Return',
-        desc: 'Choose 1 card from your opponents playingfield and return it to their hand.',
-        color: '#c94f8a',
-        realArt: 'art/0015HornedMistressDiabel.png'
-    },
-    {
-        id: '#0016', name: 'Fredariq The Undead',
-        factions: ['cursed'],
-        souls: 5,
-        abilityName: 'Undead Menace',
-        desc: 'At the end of this round, return each creature you control that was destroyed to your hand.',
-        color: '#8e3fe0',
-        realArt: 'art/0016FredariqTheUndead.png'
-    },
-    {
-        id: '#0017', name: 'Vampire Lord Silar',
-        factions: ['cursed'],
-        souls: 4,
-        abilityName: 'Vampiric Grace',
-        desc: 'Give all cards on your side of the field "Eternal Torment".',
-        color: '#8e3fe0',
-        realArt: 'art/0017VampireLordSilas.png'
-    },
-    {
-        id: '#0018', name: 'Wandering Ghost of The Vale',
-        factions: ['cursed'],
-        souls: 3,
-        abilityName: 'Eternal Hand',
-        desc: 'Grab the top card from the void and put it back into your deck, then shuffle your deck and draw 1 card.',
-        color: '#8e3fe0',
-        realArt: 'art/0018WanderingGhostOfTheVale.png'
-    },
-    {
-        id: '#0019', name: 'Anariel; Messenger of The Old Ones',
-        factions: ['pure', 'divine'],
-        souls: 5,
-        abilityName: 'Secret Spell',
-        desc: 'Remove an effect/ability from a creature card on the playingfield',
-        color: '#e8b830',
-        realArt: 'art/0019.AnarielMessengerOfTheOldOnes.png'
-    },
-    {
-        id: '#0020', name: 'Lunaris The Silver Beast',
-        factions: ['pure', 'beast'],
-        souls: 6,
-        abilityName: 'Lunar Conversion',
-        desc: 'Cards from the "Beast" faction that you control on your side of the playingfield, become "Pure" faction cards and get a "+1" to their sacrifice stat for this turn.',
-        color: '#3da84a',
-        realArt: 'art/0020Lunaris The Silver Beast.png'
-    },
-    {
-        id: '#0021', name: 'Eldriana The Cleansing Flame',
-        factions: ['pure', 'infernal'],
-        souls: 6,
-        abilityName: 'Blue Flame',
-        desc: 'Whenever a "Pure" faction creature you control is destroyed this round, summon an "infernal" creature with cost 3 or less from your deck.',
-        color: '#3da84a',
-        realArt: 'art/0021EldrianaTheCleansingFlame.png'
-    },
-    {
-        id: '#0022', name: 'Zirith Of The Mirror Ways',
-        factions: ['pure', 'tainted'],
-        souls: 6,
-        abilityName: 'Mirrored Conversion',
-        desc: 'Choose a player. Place all cards in your hand into the void, shuffle, then draw that many cards.',
-        color: '#3da84a',
-        realArt: 'art/0022ZirithOfTheMirrorWays.png'
-    },
-    {
-        id: '#0023', name: 'Visera Stealer of Souls',
-        factions: ['pure', 'cursed'],
-        souls: 5,
-        abilityName: 'Soul Stealer',
-        desc: 'During your turn, steal 1 soul from your opponent"s soul jar for each "cursed" or "pure" creature on the field.',
-        color: '#3da84a',
-        realArt: 'art/0023ViseraStealerofSouls.png'
-    },
-    {
-        id: '#0028', name: 'Brassen Bullseye',
-        factions: ['beast', 'infernal'],
-        souls: 4,
-        abilityName: 'Raging Bull',
-        desc: 'Choose a creature you control. It gains "Burning Cloak".',
-        color: '#3da84a',
-        realArt: 'art/0028BrassenBullseye.png'
-    },
-    {
-        id: '#0031', name: 'Xorath The Corrupt Statue',
-        factions: ['tainted', 'infernal'],
-        souls: 7,
-        abilityName: 'Corrupt Dominion',
-        desc: 'All enemy creatures lose 2 attack this turn. For each enemy creature destroyed this way, gain 1 Tainted or Infernal soul.',
-        color: '#c94f8a',
-        realArt: 'art/0031Xorath The Corrupt Statue.png'
-    },
-    {
-        id: '#0032', name: 'Malceron The Burned',
-        factions: ['infernal', 'cursed'],
-        souls: 6,
-        abilityName: 'Corrupt Dominion',
-        desc: 'For 1 turn, whenever a creature you control dies, deal 2 damage to a creature your opponent controls.',
-        color: '#d63030',
-        realArt: 'art/0032MalceronTheBurned.png'
-    },
-    {
-        id: '#0033', name: 'Morvath The Unholy Revenant',
-        factions: ['tainted', 'cursed'],
-        souls: 5,
-        abilityName: 'Unholy Seal',
-        desc: 'Your opponents Immortal card cannot be used this round and next round the cost is +1.',
-        color: '#8e3fe0',
-        realArt: 'art/0033MorvathTheUnholyRevanent.png'
-    }];
+/** Mutable card arrays — populated by CardLoader.loadAll() */
+let FACTIONS = [];
+let IMMORTALS = [];
+let FACTION_CARDS = [];
+let NEUTRALS = [];
+let RIFTS = [];
+let ALL_CARDS = [];
 
-const NEUTRALS = [
-    { id: 'n01', name: 'Wandering Soul', type: 'neutral', atk: 2, def: 2, cost: 1, art: '👻', ability: 'Drift', desc: 'On entering field, add 1 random soul to your jar.' },
-    { id: 'n02', name: 'Iron Golem', type: 'neutral', atk: 3, def: 4, cost: 3, art: '🗿', ability: 'Armour', desc: 'Takes 1 less damage from each attack (min 1).' },
-    { id: 'n03', name: 'Stone Sentinel', type: 'neutral', atk: 1, def: 6, cost: 3, art: '🪨', ability: 'Stalwart', desc: '+1 DEF each turn it survives on the field.' },
-    { id: 'n04', name: 'Runic Scribe', type: 'neutral', atk: 1, def: 2, cost: 1, art: '📜', ability: 'Inscribe', desc: 'When summoned, draw 1 card from your deck.' },
-    { id: 'n05', name: 'Hired Blade', type: 'neutral', atk: 4, def: 1, cost: 2, art: '🗡️', ability: 'Dash', desc: 'Can attack the turn it is summoned.' },
-    { id: 'n06', name: 'Tavern Brawler', type: 'neutral', atk: 3, def: 3, cost: 2, art: '💪', ability: 'Brawl', desc: '+1 ATK when attacking a card with higher DEF.' },
-    { id: 'n07', name: 'Mirror Mage', type: 'neutral', atk: 2, def: 3, cost: 2, art: '🪞', ability: 'Reflect', desc: 'Reflects 1 damage back on each attack.' },
-    { id: 'n08', name: 'Road Veteran', type: 'neutral', atk: 2, def: 3, cost: 2, art: '🧳', ability: 'Hardy', desc: 'Cannot be affected by Seal or Curse abilities.' },
-    { id: 'n09', name: 'Plague Rat', type: 'neutral', atk: 2, def: 1, cost: 1, art: '🐀', ability: 'Swarm', desc: 'When destroyed, summon another 1/1 Plague Rat.' },
-    { id: 'n10', name: 'Ancient Remnant', type: 'neutral', atk: 3, def: 5, cost: 4, art: '🏺', ability: 'Eternal', desc: 'Can bypass all monsters and attack player directly.' },
-    { id: 'n11', name: 'Soul Ferrier', type: 'neutral', atk: 1, def: 2, cost: 1, art: '⛵', ability: 'Passage', desc: 'On kill, gain 1 soul matching the killed card type.' },
-    { id: 'n12', name: 'Bone Archer', type: 'neutral', atk: 3, def: 1, cost: 2, art: '🏹', ability: 'Volley', desc: 'Deals 1 damage to a random enemy on enter.' },
-];
+// ═══════════════════════════════════════════════════════════════════
+//  CARD LOADER — fetches card data from external JSON files
+// ═══════════════════════════════════════════════════════════════════
 
-// ── FACTION CARDS ──
-const FACTION_CARDS = [
-    // Pure (5)
-    { id: 'p1', name: 'Tide Warden', type: 'pure', atk: 2, def: 4, cost: 2, art: '🌊', ability: 'Shield', desc: 'Reflect 1 damage when defending against an attack.' },
-    { id: 'p2', name: 'Mist Phantom', type: 'pure', atk: 3, def: 2, cost: 2, art: '👁️', ability: 'Dash', desc: 'Can attack the turn it is summoned.' },
-    { id: 'p3', name: 'Runic Guardian', type: 'pure', atk: 2, def: 5, cost: 3, art: '🗿', ability: 'Stalwart', desc: '+1 DEF at end of each turn it survives.' },
-    { id: 'p4', name: 'Frost Seer', type: 'pure', atk: 1, def: 3, cost: 2, art: '🔮', ability: 'Foresight', desc: 'Draw 1 extra card when summoned.' },
-    { id: 'p5', name: 'Wave Breaker', type: 'pure', atk: 3, def: 3, cost: 3, art: '🌀', ability: 'Ripple', desc: 'Deals 1 damage to adjacent enemy on attack.' },
-    { id: 'p6', name: 'Crystal Monk', type: 'pure', atk: 2, def: 4, cost: 3, art: '💠', ability: 'Clarity', desc: 'Allies cannot be debuffed while this is on field.' },
-    { id: 'p7', name: 'Tide Oracle', type: 'pure', atk: 4, def: 3, cost: 4, art: '🌊', ability: 'Flow', desc: '+1 ATK for each pure soul you have (max +3).' },
-    { id: 'p8', name: 'Ether Drake', type: 'pure', atk: 5, def: 2, cost: 4, art: '🐬', ability: 'Phaseshift', desc: 'Cannot be counter-attacked by defence mode cards.' },
-    // Tainted (6)
-    { id: 't1', name: 'Grave Wraith', type: 'tainted', atk: 4, def: 1, cost: 2, art: '💀', ability: 'Reap', desc: 'On kill: gain 1 soul of the killed card\'s type.' },
-    { id: 't2', name: 'Bone Revenant', type: 'tainted', atk: 3, def: 3, cost: 3, art: '🦴', ability: 'Undying', desc: 'Returns to your hand once when destroyed.' },
-    { id: 't3', name: 'Soul Leech', type: 'tainted', atk: 2, def: 2, cost: 1, art: '🩸', ability: 'Drain', desc: '+1 direct damage when attacking the player.' },
-    { id: 't4', name: 'Plague Bearer', type: 'tainted', atk: 2, def: 3, cost: 2, art: '🫀', ability: 'Rot', desc: 'Enemy hit by this loses 1 ATK permanently.' },
-    { id: 't5', name: 'Lich Overseer', type: 'tainted', atk: 4, def: 4, cost: 5, art: '🧟', ability: 'Command', desc: 'When summoned, draw 1 card from the void.' },
-    { id: 't6', name: 'Necrotic Swarm', type: 'tainted', atk: 1, def: 1, cost: 1, art: '🐛', ability: 'Multiply', desc: 'On kill, summon another Swarm in its place.' },
-    { id: 't7', name: 'Shroud Walker', type: 'tainted', atk: 3, def: 2, cost: 2, art: '🌑', ability: 'Vanish', desc: 'Cannot be targeted by Eternal or bypass abilities.' },
-    { id: 't8', name: 'Voidcaller', type: 'tainted', atk: 3, def: 3, cost: 4, art: '🕯️', ability: 'Summon', desc: 'On summon, add a random tainted card to your hand.' },
-    // Divine (5)
-    { id: 'd1', name: 'Seraph Blade', type: 'divine', atk: 4, def: 3, cost: 3, art: '🪽', ability: 'Holy', desc: '+1 bonus damage against Infernal cards.' },
-    { id: 'd2', name: 'Oracle Light', type: 'divine', atk: 1, def: 4, cost: 2, art: '☀️', ability: 'Mend', desc: 'One ally gains +1 DEF at the start of each turn.' },
-    { id: 'd3', name: 'Arbiter', type: 'divine', atk: 3, def: 4, cost: 4, art: '⚖️', ability: 'Eternal', desc: 'Can bypass all monsters and attack player directly.' },
-    { id: 'd4', name: 'Radiant Monk', type: 'divine', atk: 2, def: 4, cost: 3, art: '🕊️', ability: 'Bless', desc: 'When summoned, remove all seals from allies.' },
-    { id: 'd5', name: 'Sun Paladin', type: 'divine', atk: 3, def: 5, cost: 4, art: '🛡️', ability: 'Martyr', desc: 'On death, restore 3 DEF to one ally.' },
-    { id: 'd6', name: 'Gilded Cherub', type: 'divine', atk: 2, def: 3, cost: 2, art: '👼', ability: 'Sanctify', desc: 'Adjacent allies take 1 less damage.' },
-    { id: 'd7', name: 'Holy Arbiter', type: 'divine', atk: 4, def: 4, cost: 5, art: '⚔️', ability: 'Smite', desc: '+2 ATK vs Tainted cards.' },
-    // Infernal (6)
-    { id: 'i1', name: 'Hellhound', type: 'infernal', atk: 5, def: 1, cost: 2, art: '🔥', ability: 'Dash', desc: 'Can attack the turn it is summoned.' },
-    { id: 'i2', name: 'Ashborn', type: 'infernal', atk: 4, def: 2, cost: 2, art: '💢', ability: 'Aggravate', desc: 'Enemies must attack this card before any other.' },
-    { id: 'i3', name: 'Inferno Drake', type: 'infernal', atk: 6, def: 2, cost: 4, art: '🐲', ability: 'Burn', desc: '+1 damage on all attacks dealt.' },
-    { id: 'i4', name: 'Ember Fiend', type: 'infernal', atk: 3, def: 2, cost: 2, art: '😈', ability: 'Ignite', desc: 'At end of your turn, deal 1 damage to a random enemy.' },
-    { id: 'i5', name: 'Char Titan', type: 'infernal', atk: 5, def: 4, cost: 5, art: '🌋', ability: 'Inferno', desc: 'All enemies take 1 damage when summoned.' },
-    { id: 'i6', name: 'Cinder Imp', type: 'infernal', atk: 2, def: 1, cost: 1, art: '👿', ability: 'Spark', desc: 'On death, deal 2 damage to a random enemy.' },
-    { id: 'i7', name: 'Magma Sentinel', type: 'infernal', atk: 4, def: 4, cost: 4, art: '🪨', ability: 'Molten', desc: 'Reduces enemy DEF by 1 on each successful hit.' },
-    // Beast (6)
-    { id: 'b1', name: 'Iron Colossus', type: 'beast', atk: 5, def: 5, cost: 5, art: '🗜️', ability: 'Trample', desc: 'Excess kill damage carries through to the player.' },
-    { id: 'b2', name: 'Pack Leader', type: 'beast', atk: 3, def: 3, cost: 3, art: '🐺', ability: 'Rally', desc: '+1 ATK to all allied Beast cards on the field.' },
-    { id: 'b3', name: 'Spore Shambler', type: 'beast', atk: 2, def: 6, cost: 3, art: '🍄', ability: 'Regenerate', desc: 'Restores 1 DEF at the start of your turn.' },
-    { id: 'b4', name: 'Rampaging Boar', type: 'beast', atk: 4, def: 2, cost: 3, art: '🐗', ability: 'Charge', desc: 'Deals double damage on first attack after summoning.' },
-    { id: 'b5', name: 'Elder Tortoise', type: 'beast', atk: 1, def: 8, cost: 4, art: '🐢', ability: 'Fortress', desc: 'Allies in adjacent slots gain +1 DEF.' },
-    { id: 'b6', name: 'Razorclaw', type: 'beast', atk: 4, def: 3, cost: 3, art: '🦁', ability: 'Pounce', desc: 'Deals +1 damage for each beast ally on field.' },
-    { id: 'b7', name: 'Swamp Horror', type: 'beast', atk: 3, def: 5, cost: 4, art: '🐊', ability: 'Ensnare', desc: 'Attacked enemy cannot switch modes next turn.' },
-    // Cursed (5)
-    { id: 'c1', name: 'Hex Binder', type: 'cursed', atk: 2, def: 3, cost: 2, art: '🌀', ability: 'Seal', desc: 'Prevents one enemy card from acting for 1 turn.' },
-    { id: 'c2', name: 'Void Stalker', type: 'cursed', atk: 4, def: 1, cost: 3, art: '🕳️', ability: 'Phase', desc: 'Cannot be targeted by magic or abilities.' },
-    { id: 'c3', name: 'Dusk Weaver', type: 'cursed', atk: 3, def: 3, cost: 4, art: '🕸️', ability: 'Curse', desc: '-1 ATK to all enemies while this is on the field.' },
-    { id: 'c4', name: 'Shadow Twin', type: 'cursed', atk: 2, def: 2, cost: 2, art: '👥', ability: 'Mirror', desc: 'Copies one ability from an adjacent ally on enter.' },
-    { id: 'c5', name: 'Abyssal Reveler', type: 'cursed', atk: 4, def: 3, cost: 4, art: '🎭', ability: 'Chaos', desc: 'Randomly buffs or debuffs one card by 1 at end of turn.' },
-    { id: 'c6', name: 'Plague Sprite', type: 'cursed', atk: 2, def: 2, cost: 1, art: '🧿', ability: 'Jinx', desc: 'Reduces a summoned enemy\'s ATK by 1 on entry.' },
-    { id: 'c7', name: 'Nightmare Hound', type: 'cursed', atk: 4, def: 2, cost: 3, art: '🐾', ability: 'Terror', desc: 'Enemy cards in defence mode take +1 damage.' },
-];
+class CardLoader {
+    /** JSON file paths (relative to index.html) */
+    static PATHS = {
+        factions:  'cards/factions.json',
+        immortals: 'cards/immortals.json',
+        creatures: 'cards/creatures.json',
+        rifts:     'cards/rifts.json',
+    };
 
+    /**
+     * Load all card data from JSON files.
+     * Populates the global FACTIONS, IMMORTALS, FACTION_CARDS, NEUTRALS, RIFTS, ALL_CARDS arrays.
+     * @returns {Promise<void>}
+     */
+    static async loadAll() {
+        const results = await Promise.all(
+            Object.entries(CardLoader.PATHS).map(async ([key, path]) => {
+                try {
+                    const resp = await fetch(path);
+                    if (!resp.ok) throw new Error(`HTTP ${resp.status} for ${path}`);
+                    const data = await resp.json();
+                    return { key, data };
+                } catch (err) {
+                    console.error(`[CardLoader] Failed to load ${path}:`, err);
+                    return { key, data: [] };
+                }
+            })
+        );
 
-// ── RIFT CARDS (exactly 1 required per deck, max 1) ──
-// rarity: 'bronze' | 'silver' | 'gold'
-// timerRounds: how many rounds the rift stays before expiring
-// On activation: absorbs ATK+DEF of all friendly field cards, those cards go to void
-const RIFTS = [
-    {
-        id: '#0034', name: 'Rift of Lightning', type: 'rift', atk: 0, def: 0, cost: 4, timerRounds: 3,
-        art: '⚡', ability: 'Void Absorption', rarity: 'bronze',
-        desc: 'Gains the combined ATK and DEF of all your field creatures. Those creatures are sent to the void.',
-        isRift: true,
-        realArt: 'rift/0034RiftOfLightning.png'
-    },
-    {
-        id: '#0035', name: 'Rift of Flames', type: 'rift', atk: 0, def: 0, cost: 5, timerRounds: 4,
-        art: '🔥', ability: 'Void Absorption', rarity: 'bronze',
-        desc: 'Gains the combined ATK and DEF of all your field creatures. Those creatures are sent to the void.',
-        isRift: true,
-        realArt: 'rift/0035RiftOfFlames.png'
-    },
-    {
-        id: '#0036', name: 'Voidless Rift', type: 'rift', atk: 0, def: 0, cost: 5, timerRounds: 5,
-        art: '🌀', ability: 'Void Absorption', rarity: 'gold',
-        desc: 'Gains the combined ATK and DEF of all your field creatures. Those creatures are sent to the void.',
-        isRift: true,
-        realArt: 'rift/0036VoidlessRift.png'
-    },
-    {
-        id: '#0037', name: 'Rift of Water', type: 'rift', atk: 0, def: 0, cost: 6, timerRounds: 5,
-        art: '🌊', ability: 'Void Absorption', rarity: 'bronze',
-        desc: 'Gains the combined ATK and DEF of all your field creatures. Those creatures are sent to the void.',
-        isRift: true,
-        realArt: 'rift/0037RiftOfWater.png'
-    },
-    {
-        id: '#0038', name: 'Rift of Ice', type: 'rift', atk: 0, def: 0, cost: 4, timerRounds: 3,
-        art: '❄️', ability: 'Void Absorption', rarity: 'bronze',
-        desc: 'Gains the combined ATK and DEF of all your field creatures. Those creatures are sent to the void.',
-        isRift: true,
-        realArt: 'rift/0038RiftOfIce.png'
-    },
-    {
-        id: '#0039', name: 'Rift of Darkness', type: 'rift', atk: 0, def: 0, cost: 5, timerRounds: 4,
-        art: '🌑', ability: 'Void Absorption', rarity: 'bronze',
-        desc: 'Gains the combined ATK and DEF of all your field creatures. Those creatures are sent to the void.',
-        isRift: true,
-        realArt: 'rift/0039RiftOfDarkness.png'
-    },
-    {
-        id: '#0040', name: 'Flame Spire Rift', type: 'rift', atk: 0, def: 0, cost: 5, timerRounds: 4,
-        art: '🔱', ability: 'Void Absorption', rarity: 'silver',
-        desc: 'Gains the combined ATK and DEF of all your field creatures. Those creatures are sent to the void.',
-        isRift: true,
-        realArt: 'rift/0040FlameSpireRift.png'
-    }];
-const ALL_CARDS = [...FACTION_CARDS, ...NEUTRALS, ...RIFTS];
+        // Populate global arrays from loaded data
+        for (const { key, data } of results) {
+            switch (key) {
+                case 'factions':
+                    FACTIONS = data;
+                    break;
+                case 'immortals':
+                    IMMORTALS = data;
+                    break;
+                case 'creatures':
+                    // Split creatures into faction cards and neutrals
+                    FACTION_CARDS = data.filter(c => c.type !== 'neutral');
+                    NEUTRALS = data.filter(c => c.type === 'neutral');
+                    break;
+                case 'rifts':
+                    RIFTS = data;
+                    break;
+            }
+        }
+
+        // Build combined array (used for deck building, AI logic, etc.)
+        ALL_CARDS = [...FACTION_CARDS, ...NEUTRALS, ...RIFTS];
+
+        console.log(
+            `[CardLoader] Loaded: ${FACTIONS.length} factions, ` +
+            `${IMMORTALS.length} immortals, ${FACTION_CARDS.length} faction cards, ` +
+            `${NEUTRALS.length} neutrals, ${RIFTS.length} rifts`
+        );
+    }
+}
+
 
 const SOUL_TYPES = ['pure', 'tainted', 'divine', 'infernal', 'beast', 'cursed'];
 const SOUL_CAP = 8; // Maximum souls per type in a jar
@@ -409,6 +105,10 @@ class ScreenManager {
 
     /** Transition from one screen to another by toggling .active class */
     go(from, to) {
+        // Stop the game completely when leaving the game screen
+        if (from === 'game-screen' && app.game) {
+            app.game.stopGame();
+        }
         document.getElementById(from).classList.remove('active');
         document.getElementById(to).classList.add('active');
         // Re-init floating cards on title/menu screens
@@ -645,6 +345,7 @@ class AnimationManager {
 
     /** Flash the big phase name announcement in the centre of the screen */
     announcePhase(label) {
+        if (app.game && app.game._aborted) return Promise.resolve();
         return new Promise(resolve => {
             const el = document.getElementById('phaseAnnounceText');
             el.textContent = label;
@@ -1081,6 +782,7 @@ class UIRenderer {
 
     updatePhaseUI() {
         const gs = this.game.gs;
+        if (!gs) return;  // game was stopped
         const idx = gs.phaseIdx || 0;
         PHASES.forEach((ph, i) => {
             const pip = document.getElementById('ppip_' + i);
@@ -1119,6 +821,7 @@ class UIRenderer {
     /** Full UI refresh */
     updateUI() {
         const gs = this.game.gs;
+        if (!gs) return;  // game was stopped
         document.getElementById('p1Score').textContent = gs.score[1];
         document.getElementById('p2Score').textContent = gs.score[2];
         this.updateScoreTrack(); this.updateSoulJars(); this.renderField(); this.renderHand();
@@ -1334,6 +1037,40 @@ class Game {
         this.chosenImmortal = null;    // player's selected immortal
         this.chosenDeckId = null;      // saved deck id or null for auto
         this.initiativeWinner = 1;     // who goes first
+        this._aborted = false;         // set true when leaving game to stop all async chains
+    }
+
+    /** Stop the game completely — cancels all running async phases, hides overlays */
+    stopGame() {
+        this._aborted = true;
+        this.gs = null;
+
+        // Hide all game-related overlays and modals
+        const overlayIds = [
+            'winOverlay', 'atkOverlay', 'placeOverlay', 'initiativeOverlay',
+            'drawHandOverlay', 'voidModal', 'rollModal', 'botRollModal',
+            'deckPreviewModal'
+        ];
+        overlayIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('show');
+        });
+
+        // Hide tooltip
+        const tt = document.getElementById('tooltip');
+        if (tt) tt.classList.remove('show');
+
+        // Remove any lingering animation elements
+        const drawAnim = document.getElementById('drawCardAnim');
+        if (drawAnim) drawAnim.innerHTML = '';
+
+        // Hide phase announce
+        const pa = document.getElementById('phaseAnnounce');
+        if (pa) pa.classList.remove('playing');
+
+        // Hide dice panel
+        const dp = document.getElementById('dicePanel');
+        if (dp) dp.classList.remove('show');
     }
 
     // ── State factory ──
@@ -1809,8 +1546,9 @@ class Game {
 
     /** Advance to the next phase (player click) */
     async nextPhase() {
+        if (this._aborted) return;
         const gs = this.gs;
-        if (gs.active !== 1) return;
+        if (!gs || gs.active !== 1) return;
         const cur = PHASES[gs.phaseIdx];
         if (cur.id === 'roll' && !gs.hasRolled) { app.ui.addLog('Roll your soul dice first!', 'dmg'); return; }
         if (cur.id === 'end') { await this.doEndTurn(); return; }
@@ -1839,7 +1577,9 @@ class Game {
 
     /** End of player turn — cleanup and hand off to AI */
     async doEndTurn() {
+        if (this._aborted) return;
         const gs = this.gs;
+        if (!gs) return;
         gs.field[1].forEach((c, i) => {
             if (!c) return;
             if (c.summoned && c.ability !== 'Dash') gs.field[1][i].summoned = false;
@@ -1882,6 +1622,7 @@ class Game {
     // ── Game startup ──
 
     async startGameNow() {
+        this._aborted = false;  // reset abort flag for new game
         const gs = this.gs = this.freshState();
         gs.active = this.initiativeWinner;
         if (this.initiativeWinner === 2) gs.phase = 'ai';
@@ -1972,7 +1713,7 @@ class Game {
 }
 
 /** Utility: async sleep */
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function sleep(ms) { return new Promise(r => setTimeout(r, (app && app.game && app.game._aborted) ? 0 : ms)); }
 
 // ═══════════════════════════════════════════════════════════════════
 //  AI CONTROLLER — automated adversary turn
@@ -1986,7 +1727,9 @@ class AIController {
     /** Run the full AI turn (draw → roll → immortal → placement → fight → end) */
     async runAI() {
         const game = this.game;
+        if (game._aborted) return;  // game was stopped
         const gs = game.gs;
+        if (!gs) return;  // no game state
         const aiIm = gs.aiImmortal;
         const aiFactions = aiIm ? [...aiIm.factions, 'neutral'] : ['neutral'];
 
@@ -2003,15 +1746,18 @@ class AIController {
         };
 
         // ── START ──
+        if (game._aborted) return;
         gs.phase = 'start'; gs.phaseIdx = 0; app.ui.updateUI();
         await app.anim.announcePhase('⚑  ADVERSARY — START PHASE'); await sleep(400);
 
         // ── DRAW ──
+        if (game._aborted) return;
         gs.phase = 'draw'; gs.phaseIdx = 1; app.ui.updateUI();
         if (gs.skipFirstDraw) { gs.skipFirstDraw = false; app.ui.addLog('Adversary skips draw — opening hand dealt.', 'imp'); await sleep(300); }
         else { await app.anim.announcePhase('🃏  ADVERSARY — DRAW PHASE'); await sleep(300); if (gs.deck[2].length > 0) { game.drawCard(2); app.ui.addLog('Adversary draws a card.'); } else app.ui.addLog('Adversary has no cards left in deck!', 'dmg'); await sleep(500); }
 
         // ── ROLL ──
+        if (game._aborted) return;
         gs.phase = 'roll'; gs.phaseIdx = 2; app.ui.updateUI();
         await app.anim.announcePhase('🎲  ADVERSARY — ROLL PHASE'); await sleep(300);
         const aiFacs = aiFactions.filter(f => f !== 'neutral');
@@ -2025,6 +1771,7 @@ class AIController {
         gs.hasRolled = true; app.ui.updateUI(); await sleep(300);
 
         // ── IMMORTAL ──
+        if (game._aborted) return;
         if (aiIm && !gs.immortalUsed[2]) {
             const aiImAvail = game.immortalSoulsAvailable(aiIm, gs.souls[2]);
             const hasAllies = gs.field[2].some(c => c);
@@ -2039,6 +1786,7 @@ class AIController {
         }
 
         // ── PLACEMENT ──
+        if (game._aborted) return;
         gs.phase = 'placement'; gs.phaseIdx = 3; app.ui.updateUI();
         await app.anim.announcePhase('⚔  ADVERSARY — PLACEMENT PHASE'); await sleep(400);
         const sortedHand = [...gs.hand[2]].sort((a, b) => b.cost - a.cost);
@@ -2057,6 +1805,7 @@ class AIController {
         await sleep(300);
 
         // ── FIGHT ──
+        if (game._aborted) return;
         gs.phase = 'fight'; gs.phaseIdx = 4; app.ui.updateUI();
         await app.anim.announcePhase('💀  ADVERSARY — FIGHT PHASE'); await sleep(400);
         for (let ai = 0; ai < 5; ai++) {
@@ -2087,6 +1836,7 @@ class AIController {
         await sleep(300);
 
         // ── END ──
+        if (game._aborted) return;
         gs.phase = 'end'; gs.phaseIdx = 5; app.ui.updateUI();
         await app.anim.announcePhase('⏎  ADVERSARY — END PHASE'); await sleep(400);
         gs.field[2].forEach((c, i) => { if (c && c.summoned) gs.field[2][i].summoned = false; });
@@ -2101,6 +1851,7 @@ class AIController {
         app.ui.addLog("Adversary's turn ends.", 'imp'); await sleep(400);
 
         // ── Hand back to player ──
+        if (game._aborted) return;
         gs.turn++; gs.active = 1; gs.phase = 'start'; gs.phaseIdx = 0;
         gs.hasRolled = false; gs.immortalUsed[1] = false; gs.immortalUsed[2] = false;
         gs._undeadLegion = false; gs._cleansingFlame = false; gs._soulTide = false; gs._soulTideKills = 0;
@@ -2661,6 +2412,122 @@ class SetupUI {
 //  APP INSTANCE — global singleton binding all managers together
 // ═══════════════════════════════════════════════════════════════════
 
+// ═══════════════════════════════════════════════════════════════════
+//  PRELOADER — loads card art with progress bar before showing screens
+// ═══════════════════════════════════════════════════════════════════
+
+class Preloader {
+    constructor() {
+        this._cache = new Set();  // already loaded image paths
+        this._loaded = false;     // true after first full preload
+    }
+
+    /** Flavor text lines — cycled during loading */
+    static FLAVORS = [
+        'Awakening ancient souls...',
+        'Summoning immortal warriors...',
+        'Sharpening blades of the fallen...',
+        'Binding spirits to the cards...',
+        'Drawing power from the rift...',
+        'The arena hungers for battle...',
+        'Forging armor from cursed iron...',
+        'Channeling divine light...',
+        'Whispering to the void...',
+        'Gathering souls from the abyss...',
+        'Preparing the battlefield...',
+        'Invoking the old gods...',
+        'Tempering steel in dragonfire...',
+        'Unraveling forbidden scrolls...',
+        'The cards answer your call...',
+    ];
+
+    /** Titles per screen context */
+    static TITLES = {
+        catalogue: 'Opening the Archives...',
+        deckbuilder: 'Preparing the Forge...',
+        game: 'Entering the Arena...',
+    };
+
+    /** Collect all card art paths that need loading */
+    _getArtPaths() {
+        const paths = [];
+        IMMORTALS.forEach(c => { if (c.realArt) paths.push(c.realArt); });
+        FACTION_CARDS.forEach(c => { if (c.realArt) paths.push(c.realArt); });
+        NEUTRALS.forEach(c => { if (c.realArt) paths.push(c.realArt); });
+        RIFTS.forEach(c => { if (c.realArt) paths.push(c.realArt); });
+        return [...new Set(paths)];  // deduplicate
+    }
+
+    /**
+     * Show loading screen, preload all card art, then call onDone.
+     * @param {string} context - 'catalogue' | 'deckbuilder' | 'game'
+     * @param {Function} onDone - callback when loading finishes
+     */
+    async load(context, onDone) {
+        const allPaths = this._getArtPaths();
+        // Filter out already cached images
+        const toLoad = allPaths.filter(p => !this._cache.has(p));
+
+        // If everything is cached, skip the loading screen
+        if (toLoad.length === 0) {
+            onDone();
+            return;
+        }
+
+        // Show loading overlay
+        const overlay = document.getElementById('loadingOverlay');
+        const barFill = document.getElementById('loadingBarFill');
+        const pctEl = document.getElementById('loadingPct');
+        const titleEl = document.getElementById('loadingTitle');
+        const flavorEl = document.getElementById('loadingFlavor');
+
+        titleEl.textContent = Preloader.TITLES[context] || 'Loading...';
+        barFill.style.width = '0%';
+        pctEl.textContent = '0%';
+        flavorEl.textContent = Preloader.FLAVORS[0];
+        overlay.classList.add('show');
+
+        // Cycle flavor text
+        let flavorIdx = 0;
+        const flavorInterval = setInterval(() => {
+            flavorIdx = (flavorIdx + 1) % Preloader.FLAVORS.length;
+            flavorEl.textContent = Preloader.FLAVORS[flavorIdx];
+        }, 1800);
+
+        // Preload all images
+        const total = toLoad.length;
+        let loaded = 0;
+
+        const updateProgress = () => {
+            loaded++;
+            const pct = Math.round((loaded / total) * 100);
+            barFill.style.width = pct + '%';
+            pctEl.textContent = pct + '%';
+        };
+
+        const promises = toLoad.map(src => new Promise(resolve => {
+            const img = new Image();
+            img.onload = () => { this._cache.add(src); updateProgress(); resolve(); };
+            img.onerror = () => { updateProgress(); resolve(); };  // skip broken images
+            img.src = src;
+        }));
+
+        await Promise.all(promises);
+        this._loaded = true;
+
+        // Small delay so user sees 100%
+        barFill.style.width = '100%';
+        pctEl.textContent = '100%';
+        flavorEl.textContent = 'The cards answer your call...';
+
+        await new Promise(r => setTimeout(r, 400));
+
+        clearInterval(flavorInterval);
+        overlay.classList.remove('show');
+        onDone();
+    }
+}
+
 const app = {};
 
 // ═══════════════════════════════════════════════════════════════════
@@ -2671,7 +2538,7 @@ const app = {};
 function go(from, to) { app.screen.go(from, to); }
 
 // Setup / selection
-function renderSetup() { app.setup.renderSetup(); }
+function renderSetup() { app.preloader.load('game', () => app.setup.renderSetup()); }
 function selectImmortal(im) { app.setup.selectImmortal(im); }
 function showDeckPreview(im) { app.setup.showDeckPreview(im); }
 function closeDeckPreview() { app.setup.closeDeckPreview(); }
@@ -2699,12 +2566,19 @@ function rerollDice() { app.dice.rerollDice(); }
 function collectDice() { app.dice.collectDice(); }
 
 // Catalogue
-function setCatTab(tab) { app.catalogue.setTab(tab); }
+function setCatTab(tab) {
+    const catScreen = document.getElementById('catalogue-screen');
+    if (catScreen && catScreen.classList.contains('active')) {
+        app.catalogue.setTab(tab);  // already in catalogue — just switch tab
+    } else {
+        app.preloader.load('catalogue', () => app.catalogue.setTab(tab));
+    }
+}
 function setCatRar(r) { app.catalogue.setRar(r); }
 function renderCatalogue() { app.catalogue.render(); }
 
 // Deck builder
-function initDeckBuilder() { app.deckBuilder.init(); }
+function initDeckBuilder() { app.preloader.load('deckbuilder', () => app.deckBuilder.init()); }
 function dbGoStep1() { app.deckBuilder.goStep1(); }
 function dbGoStep2() { app.deckBuilder.goStep2(); }
 function dbSelectImmortal(im) { app.deckBuilder.selectImmortal(im); }
@@ -2736,7 +2610,10 @@ function closeDrawHand() { document.getElementById('drawHandOverlay').classList.
 //  INITIALISATION — wire up all managers on DOM ready
 // ═══════════════════════════════════════════════════════════════════
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
+    // Load all card data from JSON files first
+    await CardLoader.loadAll();
+
     // Create all managers
     app.screen = new ScreenManager();
     app.anim = new AnimationManager();
@@ -2748,6 +2625,7 @@ window.addEventListener('DOMContentLoaded', () => {
     app.catalogue = new CatalogueUI();
     app.deckBuilder = new DeckBuilderUI();
     app.setup = new SetupUI();
+    app.preloader = new Preloader();
 
     // Init tooltip element reference
     app.tooltip.init();
