@@ -1,6 +1,7 @@
 // ═══════════════════════════════════════════════════════════════════
-//  CARD DATA — loaded from JSON files via CardLoader
+//  CARD DATA — loaded from JSON files, with embedded fallback
 //  To add new cards: edit the JSON files in /cards folder
+//  The embedded fallback ensures the game works offline & via file://
 // ═══════════════════════════════════════════════════════════════════
 
 /** Mutable card arrays — populated by CardLoader.loadAll() */
@@ -12,11 +13,11 @@ let RIFTS = [];
 let ALL_CARDS = [];
 
 // ═══════════════════════════════════════════════════════════════════
-//  CARD LOADER — fetches card data from external JSON files
+//  CARD LOADER — fetches JSON with embedded fallback
 // ═══════════════════════════════════════════════════════════════════
 
 class CardLoader {
-    /** JSON file paths (relative to index.html) */
+    /** JSON file paths (relative to HTML) */
     static PATHS = {
         factions:  'cards/factions.json',
         immortals: 'cards/immortals.json',
@@ -24,53 +25,54 @@ class CardLoader {
         rifts:     'cards/rifts.json',
     };
 
+    /** Embedded fallback data (auto-generated from JSON files) */
+    static FALLBACK = {
+        factions:  [{"id":"pure","name":"Pure","color":"#4a9eff","glow":"rgba(74,158,255,.4)","icon":"💧","desc":"Balanced. Rich in Magic & Artefacts."},{"id":"tainted","name":"Tainted","color":"#d45b9e","glow":"rgba(212,91,158,.4)","icon":"☠️","desc":"Reanimation. Sacrifice combos. Debuffs."},{"id":"divine","name":"Divine","color":"#f0c040","glow":"rgba(240,192,64,.4)","icon":"✨","desc":"Healing. Powerful Magic Cards."},{"id":"infernal","name":"Infernal","color":"#e03030","glow":"rgba(224,48,48,.4)","icon":"🔥","desc":"High damage. Aggressive. Low magic."},{"id":"beast","name":"Beast","color":"#4aaa55","glow":"rgba(74,170,85,.4)","icon":"🐉","desc":"Sacrifice. High cost — high power."},{"id":"cursed","name":"Cursed","color":"#9a4aee","glow":"rgba(154,74,238,.4)","icon":"🌀","desc":"Abilities. Timer card synergy."},{"id":"neutral","name":"Neutral","color":"#9a9a8a","glow":"rgba(154,154,138,.4)","icon":"⚪","desc":"Available to any deck. No specific faction soul cost."}],
+        immortals: [{"id":"#0001","name":"Nero; The Old King","factions":["pure"],"souls":3,"abilityName":"Royal Command","desc":"All the cards on the opponents side of the field go into the attack stand for this turn.","color":"#5baeff","realArt":"art/0001NeroTheOldKing.png"},{"id":"#0002","name":"Military Commander Otren","factions":["pure"],"souls":3,"abilityName":"Tactical Suppression","desc":"Give all the cards on your opponents side of the playingfield -1 attack for this turn.","color":"#5baeff","realArt":"art/0002MilitaryCommanderOtren.png"},{"id":"#0003","name":"Nymph of the Reef","factions":["pure"],"souls":4,"abilityName":"Soul Harvest","desc":"For every card (opponent included) that you destroy this turn, you get 1 soul of your choice back into the soul jar.","color":"#5baeff","realArt":"art/0003Nymph of the reef.png"},{"id":"#0004","name":"Emma; The Angelic Cleric","factions":["divine"],"souls":4,"abilityName":"Divine Mend","desc":"All cards on your side of the field restore 2 Health, up to their maximum Health.","color":"#e8b830","realArt":"art/0004Emma; The Angelic Cleric.png"},{"id":"#0005","name":"Archangel Promethias","factions":["divine"],"souls":4,"abilityName":"Divine Shield","desc":"For 1 round, all cards on your side of the field cannot have their health reduced below 1.","color":"#e8b830","realArt":"art/0005Archangel Promotheus.png"},{"id":"#0006","name":"Ksama The Godwoken","factions":["divine"],"souls":5,"abilityName":"Heavenly Smite","desc":"All cards on your side of the field gain Heavenly Smite this turn.","color":"#e8b830","realArt":"art/0006KsamaTheGodWoken.png"},{"id":"#0007","name":"Naga the Cunning","factions":["beast"],"souls":5,"abilityName":"Predators Claim","desc":"Sacrifice 1 card on your opponents field. Gain its Soul Points.","color":"#3da84a","realArt":"art/0007Naga the Cunning.png"},{"id":"#0008","name":"Beast Rider Tlalli","factions":["beast"],"souls":3,"abilityName":"Sudden Assault","desc":"All creatures on your side of the field gain Sudden Assault until the start of your next turn.","color":"#3da84a","realArt":"art/0008BeastRiderTlalli.png"},{"id":"#0009","name":"Kalu Healer of the Sea","factions":["beast"],"souls":3,"abilityName":"Sacrifice Blessing","desc":"All creatures on your side of the field that you sacrifice this turn have a +1 sacrifice bonus.","color":"#3da84a","realArt":"art/0009KaluHealerOfTheSeapng.png"},{"id":"#0010","name":"Dranic The Devourer","factions":["infernal"],"souls":4,"abilityName":"Devouring Strike","desc":"Give 1 card on your side of the field +3 attack for 1 round.","color":"#d63030","realArt":"art/0010Dranic The Devourer.png"},{"id":"#0011","name":"Wingless Demon Fleq","factions":["infernal"],"souls":4,"abilityName":"Demon Dash","desc":"Give all the cards on your side of the playingfield \"Dash\".","color":"#d63030","realArt":"art/0011WinglessDemonFleq.png"},{"id":"#0012","name":"Beacore The Blue","factions":["infernal"],"souls":6,"abilityName":"Blue Surge","desc":"Give all cards on your side of the field +2 attack for this turn.","color":"#5baeff","realArt":"art/0012BeacoreTheBlue.png"},{"id":"#0013","name":"Isabella; Witch of the Void","factions":["tainted"],"souls":3,"abilityName":"Void Hand","desc":"Send a card from your opponents hand of your choosing to the void.","color":"#c94f8a","realArt":"art/0013Isabella; Witch of the void.png"},{"id":"#0014","name":"The Foul One","factions":["tainted"],"souls":6,"abilityName":"Dark Ritual","desc":"Give all the cards on your side of the field \"Dark Ritual\".","color":"#c94f8a","realArt":"art/0014TheFoulOne.png"},{"id":"#0015","name":"Horned Mistress Diabel","factions":["tainted"],"souls":5,"abilityName":"Mistress Return","desc":"Choose 1 card from your opponents playingfield and return it to their hand.","color":"#c94f8a","realArt":"art/0015HornedMistressDiabel.png"},{"id":"#0016","name":"Fredariq The Undead","factions":["cursed"],"souls":5,"abilityName":"Undead Menace","desc":"At the end of this round, return each creature you control that was destroyed to your hand.","color":"#8e3fe0","realArt":"art/0016FredariqTheUndead.png"},{"id":"#0017","name":"Vampire Lord Silar","factions":["cursed"],"souls":4,"abilityName":"Vampiric Grace","desc":"Give all cards on your side of the field \"Eternal Torment\".","color":"#8e3fe0","realArt":"art/0017VampireLordSilas.png"},{"id":"#0018","name":"Wandering Ghost of The Vale","factions":["cursed"],"souls":3,"abilityName":"Eternal Hand","desc":"Grab the top card from the void and put it back into your deck, then shuffle your deck and draw 1 card.","color":"#8e3fe0","realArt":"art/0018WanderingGhostOfTheVale.png"},{"id":"#0019","name":"Anariel; Messenger of The Old Ones","factions":["pure","divine"],"souls":5,"abilityName":"Secret Spell","desc":"Remove an effect/ability from a creature card on the playingfield","color":"#e8b830","realArt":"art/0019.AnarielMessengerOfTheOldOnes.png"},{"id":"#0020","name":"Lunaris The Silver Beast","factions":["pure","beast"],"souls":6,"abilityName":"Lunar Conversion","desc":"Cards from the \"Beast\" faction that you control on your side of the playingfield, become \"Pure\" faction cards and get a \"+1\" to their sacrifice stat for this turn.","color":"#3da84a","realArt":"art/0020Lunaris The Silver Beast.png"},{"id":"#0021","name":"Eldriana The Cleansing Flame","factions":["pure","infernal"],"souls":6,"abilityName":"Blue Flame","desc":"Whenever a \"Pure\" faction creature you control is destroyed this round, summon an \"infernal\" creature with cost 3 or less from your deck.","color":"#3da84a","realArt":"art/0021EldrianaTheCleansingFlame.png"},{"id":"#0022","name":"Zirith Of The Mirror Ways","factions":["pure","tainted"],"souls":6,"abilityName":"Mirrored Conversion","desc":"Choose a player. Place all cards in your hand into the void, shuffle, then draw that many cards.","color":"#3da84a","realArt":"art/0022ZirithOfTheMirrorWays.png"},{"id":"#0023","name":"Visera Stealer of Souls","factions":["pure","cursed"],"souls":5,"abilityName":"Soul Stealer","desc":"During your turn, steal 1 soul from your opponent\"s soul jar for each \"cursed\" or \"pure\" creature on the field.","color":"#3da84a","realArt":"art/0023ViseraStealerofSouls.png"},{"id":"#0028","name":"Brassen Bullseye","factions":["beast","infernal"],"souls":4,"abilityName":"Raging Bull","desc":"Choose a creature you control. It gains \"Burning Cloak\".","color":"#3da84a","realArt":"art/0028BrassenBullseye.png"},{"id":"#0031","name":"Xorath The Corrupt Statue","factions":["tainted","infernal"],"souls":7,"abilityName":"Corrupt Dominion","desc":"All enemy creatures lose 2 attack this turn. For each enemy creature destroyed this way, gain 1 Tainted or Infernal soul.","color":"#c94f8a","realArt":"art/0031Xorath The Corrupt Statue.png"},{"id":"#0032","name":"Malceron The Burned","factions":["infernal","cursed"],"souls":6,"abilityName":"Corrupt Dominion","desc":"For 1 turn, whenever a creature you control dies, deal 2 damage to a creature your opponent controls.","color":"#d63030","realArt":"art/0032MalceronTheBurned.png"},{"id":"#0033","name":"Morvath The Unholy Revenant","factions":["tainted","cursed"],"souls":5,"abilityName":"Unholy Seal","desc":"Your opponents Immortal card cannot be used this round and next round the cost is +1.","color":"#8e3fe0","realArt":"art/0033MorvathTheUnholyRevanent.png"}],
+        creatures: [{"id":"p1","name":"Tide Warden","type":"pure","atk":2,"def":4,"cost":2,"art":"🌊","ability":"Shield","desc":"Reflect 1 damage when defending against an attack."},{"id":"p2","name":"Mist Phantom","type":"pure","atk":3,"def":2,"cost":2,"art":"👁️","ability":"Dash","desc":"Can attack the turn it is summoned."},{"id":"p3","name":"Runic Guardian","type":"pure","atk":2,"def":5,"cost":3,"art":"🗿","ability":"Stalwart","desc":"+1 DEF at end of each turn it survives."},{"id":"p4","name":"Frost Seer","type":"pure","atk":1,"def":3,"cost":2,"art":"🔮","ability":"Foresight","desc":"Draw 1 extra card when summoned."},{"id":"p5","name":"Wave Breaker","type":"pure","atk":3,"def":3,"cost":3,"art":"🌀","ability":"Ripple","desc":"Deals 1 damage to adjacent enemy on attack."},{"id":"p6","name":"Crystal Monk","type":"pure","atk":2,"def":4,"cost":3,"art":"💠","ability":"Clarity","desc":"Allies cannot be debuffed while this is on field."},{"id":"p7","name":"Tide Oracle","type":"pure","atk":4,"def":3,"cost":4,"art":"🌊","ability":"Flow","desc":"+1 ATK for each pure soul you have (max +3)."},{"id":"p8","name":"Ether Drake","type":"pure","atk":5,"def":2,"cost":4,"art":"🐬","ability":"Phaseshift","desc":"Cannot be counter-attacked by defence mode cards."},{"id":"t1","name":"Grave Wraith","type":"tainted","atk":4,"def":1,"cost":2,"art":"💀","ability":"Reap","desc":"On kill: gain 1 soul of the killed card's type."},{"id":"t2","name":"Bone Revenant","type":"tainted","atk":3,"def":3,"cost":3,"art":"🦴","ability":"Undying","desc":"Returns to your hand once when destroyed."},{"id":"t3","name":"Soul Leech","type":"tainted","atk":2,"def":2,"cost":1,"art":"🩸","ability":"Drain","desc":"+1 direct damage when attacking the player."},{"id":"t4","name":"Plague Bearer","type":"tainted","atk":2,"def":3,"cost":2,"art":"🫀","ability":"Rot","desc":"Enemy hit by this loses 1 ATK permanently."},{"id":"t5","name":"Lich Overseer","type":"tainted","atk":4,"def":4,"cost":5,"art":"🧟","ability":"Command","desc":"When summoned, draw 1 card from the void."},{"id":"t6","name":"Necrotic Swarm","type":"tainted","atk":1,"def":1,"cost":1,"art":"🐛","ability":"Multiply","desc":"On kill, summon another Swarm in its place."},{"id":"t7","name":"Shroud Walker","type":"tainted","atk":3,"def":2,"cost":2,"art":"🌑","ability":"Vanish","desc":"Cannot be targeted by Eternal or bypass abilities."},{"id":"t8","name":"Voidcaller","type":"tainted","atk":3,"def":3,"cost":4,"art":"🕯️","ability":"Summon","desc":"On summon, add a random tainted card to your hand."},{"id":"d1","name":"Seraph Blade","type":"divine","atk":4,"def":3,"cost":3,"art":"🪽","ability":"Holy","desc":"+1 bonus damage against Infernal cards."},{"id":"d2","name":"Oracle Light","type":"divine","atk":1,"def":4,"cost":2,"art":"☀️","ability":"Mend","desc":"One ally gains +1 DEF at the start of each turn."},{"id":"d3","name":"Arbiter","type":"divine","atk":3,"def":4,"cost":4,"art":"⚖️","ability":"Eternal","desc":"Can bypass all monsters and attack player directly."},{"id":"d4","name":"Radiant Monk","type":"divine","atk":2,"def":4,"cost":3,"art":"🕊️","ability":"Bless","desc":"When summoned, remove all seals from allies."},{"id":"d5","name":"Sun Paladin","type":"divine","atk":3,"def":5,"cost":4,"art":"🛡️","ability":"Martyr","desc":"On death, restore 3 DEF to one ally."},{"id":"d6","name":"Gilded Cherub","type":"divine","atk":2,"def":3,"cost":2,"art":"👼","ability":"Sanctify","desc":"Adjacent allies take 1 less damage."},{"id":"d7","name":"Holy Arbiter","type":"divine","atk":4,"def":4,"cost":5,"art":"⚔️","ability":"Smite","desc":"+2 ATK vs Tainted cards."},{"id":"i1","name":"Hellhound","type":"infernal","atk":5,"def":1,"cost":2,"art":"🔥","ability":"Dash","desc":"Can attack the turn it is summoned."},{"id":"i2","name":"Ashborn","type":"infernal","atk":4,"def":2,"cost":2,"art":"💢","ability":"Aggravate","desc":"Enemies must attack this card before any other."},{"id":"i3","name":"Inferno Drake","type":"infernal","atk":6,"def":2,"cost":4,"art":"🐲","ability":"Burn","desc":"+1 damage on all attacks dealt."},{"id":"i4","name":"Ember Fiend","type":"infernal","atk":3,"def":2,"cost":2,"art":"😈","ability":"Ignite","desc":"At end of your turn, deal 1 damage to a random enemy."},{"id":"i5","name":"Char Titan","type":"infernal","atk":5,"def":4,"cost":5,"art":"🌋","ability":"Inferno","desc":"All enemies take 1 damage when summoned."},{"id":"i6","name":"Cinder Imp","type":"infernal","atk":2,"def":1,"cost":1,"art":"👿","ability":"Spark","desc":"On death, deal 2 damage to a random enemy."},{"id":"i7","name":"Magma Sentinel","type":"infernal","atk":4,"def":4,"cost":4,"art":"🪨","ability":"Molten","desc":"Reduces enemy DEF by 1 on each successful hit."},{"id":"b1","name":"Iron Colossus","type":"beast","atk":5,"def":5,"cost":5,"art":"🗜️","ability":"Trample","desc":"Excess kill damage carries through to the player."},{"id":"b2","name":"Pack Leader","type":"beast","atk":3,"def":3,"cost":3,"art":"🐺","ability":"Rally","desc":"+1 ATK to all allied Beast cards on the field."},{"id":"b3","name":"Spore Shambler","type":"beast","atk":2,"def":6,"cost":3,"art":"🍄","ability":"Regenerate","desc":"Restores 1 DEF at the start of your turn."},{"id":"b4","name":"Rampaging Boar","type":"beast","atk":4,"def":2,"cost":3,"art":"🐗","ability":"Charge","desc":"Deals double damage on first attack after summoning."},{"id":"b5","name":"Elder Tortoise","type":"beast","atk":1,"def":8,"cost":4,"art":"🐢","ability":"Fortress","desc":"Allies in adjacent slots gain +1 DEF."},{"id":"b6","name":"Razorclaw","type":"beast","atk":4,"def":3,"cost":3,"art":"🦁","ability":"Pounce","desc":"Deals +1 damage for each beast ally on field."},{"id":"b7","name":"Swamp Horror","type":"beast","atk":3,"def":5,"cost":4,"art":"🐊","ability":"Ensnare","desc":"Attacked enemy cannot switch modes next turn."},{"id":"c1","name":"Hex Binder","type":"cursed","atk":2,"def":3,"cost":2,"art":"🌀","ability":"Seal","desc":"Prevents one enemy card from acting for 1 turn."},{"id":"c2","name":"Void Stalker","type":"cursed","atk":4,"def":1,"cost":3,"art":"🕳️","ability":"Phase","desc":"Cannot be targeted by magic or abilities."},{"id":"c3","name":"Dusk Weaver","type":"cursed","atk":3,"def":3,"cost":4,"art":"🕸️","ability":"Curse","desc":"-1 ATK to all enemies while this is on the field."},{"id":"c4","name":"Shadow Twin","type":"cursed","atk":2,"def":2,"cost":2,"art":"👥","ability":"Mirror","desc":"Copies one ability from an adjacent ally on enter."},{"id":"c5","name":"Abyssal Reveler","type":"cursed","atk":4,"def":3,"cost":4,"art":"🎭","ability":"Chaos","desc":"Randomly buffs or debuffs one card by 1 at end of turn."},{"id":"c6","name":"Plague Sprite","type":"cursed","atk":2,"def":2,"cost":1,"art":"🧿","ability":"Jinx","desc":"Reduces a summoned enemy's ATK by 1 on entry."},{"id":"c7","name":"Nightmare Hound","type":"cursed","atk":4,"def":2,"cost":3,"art":"🐾","ability":"Terror","desc":"Enemy cards in defence mode take +1 damage."},{"id":"n01","name":"Wandering Soul","type":"neutral","atk":2,"def":2,"cost":1,"art":"👻","ability":"Drift","desc":"On entering field, add 1 random soul to your jar."},{"id":"n02","name":"Iron Golem","type":"neutral","atk":3,"def":4,"cost":3,"art":"🗿","ability":"Armour","desc":"Takes 1 less damage from each attack (min 1)."},{"id":"n03","name":"Stone Sentinel","type":"neutral","atk":1,"def":6,"cost":3,"art":"🪨","ability":"Stalwart","desc":"+1 DEF each turn it survives on the field."},{"id":"n04","name":"Runic Scribe","type":"neutral","atk":1,"def":2,"cost":1,"art":"📜","ability":"Inscribe","desc":"When summoned, draw 1 card from your deck."},{"id":"n05","name":"Hired Blade","type":"neutral","atk":4,"def":1,"cost":2,"art":"🗡️","ability":"Dash","desc":"Can attack the turn it is summoned."},{"id":"n06","name":"Tavern Brawler","type":"neutral","atk":3,"def":3,"cost":2,"art":"💪","ability":"Brawl","desc":"+1 ATK when attacking a card with higher DEF."},{"id":"n07","name":"Mirror Mage","type":"neutral","atk":2,"def":3,"cost":2,"art":"🪞","ability":"Reflect","desc":"Reflects 1 damage back on each attack."},{"id":"n08","name":"Road Veteran","type":"neutral","atk":2,"def":3,"cost":2,"art":"🧳","ability":"Hardy","desc":"Cannot be affected by Seal or Curse abilities."},{"id":"n09","name":"Plague Rat","type":"neutral","atk":2,"def":1,"cost":1,"art":"🐀","ability":"Swarm","desc":"When destroyed, summon another 1/1 Plague Rat."},{"id":"n10","name":"Ancient Remnant","type":"neutral","atk":3,"def":5,"cost":4,"art":"🏺","ability":"Eternal","desc":"Can bypass all monsters and attack player directly."},{"id":"n11","name":"Soul Ferrier","type":"neutral","atk":1,"def":2,"cost":1,"art":"⛵","ability":"Passage","desc":"On kill, gain 1 soul matching the killed card type."},{"id":"n12","name":"Bone Archer","type":"neutral","atk":3,"def":1,"cost":2,"art":"🏹","ability":"Volley","desc":"Deals 1 damage to a random enemy on enter."}],
+        rifts:     [{"id":"#0034","name":"Rift of Lightning","type":"rift","atk":0,"def":0,"cost":4,"timerRounds":3,"art":"⚡","ability":"Void Absorption","rarity":"bronze","desc":"Gains the combined ATK and DEF of all your field creatures. Those creatures are sent to the void.","isRift":true,"realArt":"rift/0034RiftOfLightning.png"},{"id":"#0035","name":"Rift of Flames","type":"rift","atk":0,"def":0,"cost":5,"timerRounds":4,"art":"🔥","ability":"Void Absorption","rarity":"bronze","desc":"Gains the combined ATK and DEF of all your field creatures. Those creatures are sent to the void.","isRift":true,"realArt":"rift/0035RiftOfFlames.png"},{"id":"#0036","name":"Voidless Rift","type":"rift","atk":0,"def":0,"cost":5,"timerRounds":5,"art":"🌀","ability":"Void Absorption","rarity":"gold","desc":"Gains the combined ATK and DEF of all your field creatures. Those creatures are sent to the void.","isRift":true,"realArt":"rift/0036VoidlessRift.png"},{"id":"#0037","name":"Rift of Water","type":"rift","atk":0,"def":0,"cost":6,"timerRounds":5,"art":"🌊","ability":"Void Absorption","rarity":"bronze","desc":"Gains the combined ATK and DEF of all your field creatures. Those creatures are sent to the void.","isRift":true,"realArt":"rift/0037RiftOfWater.png"},{"id":"#0038","name":"Rift of Ice","type":"rift","atk":0,"def":0,"cost":4,"timerRounds":3,"art":"❄️","ability":"Void Absorption","rarity":"bronze","desc":"Gains the combined ATK and DEF of all your field creatures. Those creatures are sent to the void.","isRift":true,"realArt":"rift/0038RiftOfIce.png"},{"id":"#0039","name":"Rift of Darkness","type":"rift","atk":0,"def":0,"cost":5,"timerRounds":4,"art":"🌑","ability":"Void Absorption","rarity":"bronze","desc":"Gains the combined ATK and DEF of all your field creatures. Those creatures are sent to the void.","isRift":true,"realArt":"rift/0039RiftOfDarkness.png"},{"id":"#0040","name":"Flame Spire Rift","type":"rift","atk":0,"def":0,"cost":5,"timerRounds":4,"art":"🔱","ability":"Void Absorption","rarity":"silver","desc":"Gains the combined ATK and DEF of all your field creatures. Those creatures are sent to the void.","isRift":true,"realArt":"rift/0040FlameSpireRift.png"}],
+    };
+
     /**
-     * Load all card data from JSON files.
-     * Populates the global FACTIONS, IMMORTALS, FACTION_CARDS, NEUTRALS, RIFTS, ALL_CARDS arrays.
+     * Try to fetch a JSON file; return fallback data on failure.
+     * @param {string} key - data key (factions, immortals, creatures, rifts)
+     * @returns {Promise<Array>}
+     */
+    static async _fetch(key) {
+        try {
+            const resp = await fetch(CardLoader.PATHS[key]);
+            if (!resp.ok) throw new Error('HTTP ' + resp.status);
+            return await resp.json();
+        } catch (err) {
+            console.warn('[CardLoader] JSON fetch failed for ' + key + ', using embedded fallback.');
+            return CardLoader.FALLBACK[key];
+        }
+    }
+
+    /**
+     * Load all card data. Tries JSON files first, falls back to embedded data.
+     * Populates FACTIONS, IMMORTALS, FACTION_CARDS, NEUTRALS, RIFTS, ALL_CARDS.
      * @returns {Promise<void>}
      */
     static async loadAll() {
-        const results = await Promise.all(
-            Object.entries(CardLoader.PATHS).map(async ([key, path]) => {
-                try {
-                    const resp = await fetch(path);
-                    if (!resp.ok) throw new Error(`HTTP ${resp.status} for ${path}`);
-                    const data = await resp.json();
-                    return { key, data };
-                } catch (err) {
-                    console.error(`[CardLoader] Failed to load ${path}:`, err);
-                    return { key, data: [] };
-                }
-            })
-        );
+        const [factions, immortals, creatures, rifts] = await Promise.all([
+            CardLoader._fetch('factions'),
+            CardLoader._fetch('immortals'),
+            CardLoader._fetch('creatures'),
+            CardLoader._fetch('rifts'),
+        ]);
 
-        // Populate global arrays from loaded data
-        for (const { key, data } of results) {
-            switch (key) {
-                case 'factions':
-                    FACTIONS = data;
-                    break;
-                case 'immortals':
-                    IMMORTALS = data;
-                    break;
-                case 'creatures':
-                    // Split creatures into faction cards and neutrals
-                    FACTION_CARDS = data.filter(c => c.type !== 'neutral');
-                    NEUTRALS = data.filter(c => c.type === 'neutral');
-                    break;
-                case 'rifts':
-                    RIFTS = data;
-                    break;
-            }
-        }
-
-        // Build combined array (used for deck building, AI logic, etc.)
+        FACTIONS = factions;
+        IMMORTALS = immortals;
+        FACTION_CARDS = creatures.filter(c => c.type !== 'neutral');
+        NEUTRALS = creatures.filter(c => c.type === 'neutral');
+        RIFTS = rifts;
         ALL_CARDS = [...FACTION_CARDS, ...NEUTRALS, ...RIFTS];
 
         console.log(
-            `[CardLoader] Loaded: ${FACTIONS.length} factions, ` +
-            `${IMMORTALS.length} immortals, ${FACTION_CARDS.length} faction cards, ` +
-            `${NEUTRALS.length} neutrals, ${RIFTS.length} rifts`
+            '[CardLoader] Loaded: ' + FACTIONS.length + ' factions, ' +
+            IMMORTALS.length + ' immortals, ' + FACTION_CARDS.length + ' faction cards, ' +
+            NEUTRALS.length + ' neutrals, ' + RIFTS.length + ' rifts'
         );
     }
 }
@@ -207,35 +209,55 @@ class AnimationManager {
             const cx = rect.left + rect.width / 2;
             const cy = rect.top + rect.height / 2;
 
+            // Card scale-in entrance
+            if (slotEl) {
+                slotEl.style.transition = 'transform .35s cubic-bezier(.2,1.4,.5,1), opacity .25s';
+                slotEl.style.transform = 'scale(0.3)';
+                slotEl.style.opacity = '0';
+                requestAnimationFrame(() => {
+                    slotEl.style.transform = 'scale(1)';
+                    slotEl.style.opacity = '1';
+                    setTimeout(() => { slotEl.style.transition = ''; slotEl.style.transform = ''; }, 400);
+                });
+            }
+
+            // Expanding ring pulse
+            const ring = document.createElement('div');
+            ring.className = 'summon-ring';
+            ring.style.cssText = `left:${cx}px;top:${cy}px;border-color:${color};box-shadow:0 0 20px ${color}88,inset 0 0 20px ${color}44;`;
+            document.body.appendChild(ring);
+            setTimeout(() => ring.remove(), 800);
+
             // Screen edge flash
             const flash = document.createElement('div');
             flash.className = 'summon-flash';
-            flash.style.background = `radial-gradient(ellipse at ${cx}px ${cy}px, ${color}44 0%, transparent 70%)`;
+            flash.style.background = `radial-gradient(ellipse at ${cx}px ${cy}px, ${color}55 0%, transparent 60%)`;
             document.body.appendChild(flash);
             setTimeout(() => flash.remove(), 600);
 
-            // Rising soul mist particles
-            for (let i = 0; i < 14; i++) {
+            // Rising soul mist particles (more + varied)
+            for (let i = 0; i < 18; i++) {
                 setTimeout(() => {
                     const p = document.createElement('div');
                     p.className = 'soul-mist-particle';
-                    const size = 6 + Math.random() * 16;
-                    const offX = (Math.random() - .5) * rect.width * 1.2;
-                    p.style.cssText = `width:${size}px;height:${size}px;left:${cx + offX - size / 2}px;top:${cy + 20}px;background:radial-gradient(circle,${color}cc 0%,${color}00 100%);animation-delay:${Math.random() * 200}ms;animation-duration:${900 + Math.random() * 400}ms;`;
+                    const size = 4 + Math.random() * 18;
+                    const offX = (Math.random() - .5) * rect.width * 1.6;
+                    const dur = 800 + Math.random() * 500;
+                    p.style.cssText = `width:${size}px;height:${size}px;left:${cx + offX - size / 2}px;top:${cy + 20}px;background:radial-gradient(circle,${color}dd 0%,${color}00 100%);animation-duration:${dur}ms;`;
                     document.body.appendChild(p);
-                    setTimeout(() => p.remove(), 1400);
-                }, i * 30);
+                    setTimeout(() => p.remove(), dur + 200);
+                }, i * 25);
             }
 
-            // Central sigil
-            const SIGILS = ['✦', '◆', '⟁', '✧', '❋'];
+            // Central sigil (bigger, brighter)
+            const SIGILS = ['✦', '◆', '⟁', '✧', '❋', '⚝'];
             const sigil = document.createElement('div');
             sigil.className = 'soul-sigil';
             sigil.textContent = SIGILS[Math.floor(Math.random() * SIGILS.length)];
-            sigil.style.cssText = `left:${cx}px;top:${cy}px;transform:translate(-50%,-50%);color:${color};`;
+            sigil.style.cssText = `left:${cx}px;top:${cy}px;transform:translate(-50%,-50%);color:${color};font-size:2.8rem;`;
             document.body.appendChild(sigil);
             setTimeout(() => sigil.remove(), 1100);
-            setTimeout(resolve, 700);
+            setTimeout(resolve, 650);
         });
     }
 
@@ -248,22 +270,49 @@ class AnimationManager {
             const length = Math.hypot(dx, dy);
             const angle = Math.atan2(dy, dx) * (180 / Math.PI);
 
+            // Attacker lunge
+            if (atkEl) {
+                atkEl.style.transition = 'transform .15s ease-in';
+                atkEl.style.transform = `translate(${dx * 0.15}px, ${dy * 0.15}px)`;
+                setTimeout(() => { atkEl.style.transition = 'transform .25s ease-out'; atkEl.style.transform = ''; }, 150);
+            }
+
+            // Main slash beam (thicker + glow)
             const slash = document.createElement('div');
             slash.className = 'attack-slash';
-            slash.style.cssText = `left:${a.x}px;top:${a.y}px;width:${length}px;background:linear-gradient(90deg,${color}00,${color}ff,${color}dd);transform:rotate(${angle}deg);box-shadow:0 0 8px ${color},0 0 16px ${color}88;`;
+            slash.style.cssText = `left:${a.x}px;top:${a.y}px;width:${length}px;height:5px;background:linear-gradient(90deg,${color}00,${color}ff,${color}ee,${color}88);transform:rotate(${angle}deg);box-shadow:0 0 12px ${color},0 0 24px ${color}66;`;
             document.body.appendChild(slash);
             setTimeout(() => slash.remove(), 500);
 
+            // Impact on target
             setTimeout(() => {
-                const IMPACTS = ['💥', '⚡', '✦', '◆'];
+                // Impact burst
+                const IMPACTS = ['💥', '⚡', '✦', '💢'];
                 const burst = document.createElement('div');
                 burst.className = 'impact-burst';
                 burst.textContent = IMPACTS[Math.floor(Math.random() * IMPACTS.length)];
-                burst.style.cssText = `left:${d.x}px;top:${d.y}px;transform:translate(-50%,-50%);color:${color};`;
+                burst.style.cssText = `left:${d.x}px;top:${d.y}px;transform:translate(-50%,-50%);color:${color};font-size:2.4rem;`;
                 document.body.appendChild(burst);
-                if (defEl) { defEl.classList.add('card-shake'); setTimeout(() => defEl.classList.remove('card-shake'), 450); }
                 setTimeout(() => burst.remove(), 750);
-            }, 200);
+
+                // Sparks flying from impact
+                for (let i = 0; i < 8; i++) {
+                    const spark = document.createElement('div');
+                    spark.className = 'hit-spark';
+                    const ang = (Math.random() * Math.PI * 2);
+                    const dist = 30 + Math.random() * 50;
+                    spark.style.cssText = `left:${d.x}px;top:${d.y}px;--sx:${Math.cos(ang) * dist}px;--sy:${Math.sin(ang) * dist}px;background:${color};`;
+                    document.body.appendChild(spark);
+                    setTimeout(() => spark.remove(), 600);
+                }
+
+                // Card shake (stronger)
+                if (defEl) { defEl.classList.add('card-shake'); setTimeout(() => defEl.classList.remove('card-shake'), 450); }
+
+                // Screen micro-shake
+                document.body.classList.add('screen-shake');
+                setTimeout(() => document.body.classList.remove('screen-shake'), 300);
+            }, 180);
 
             setTimeout(resolve, 550);
         });
@@ -273,28 +322,97 @@ class AnimationManager {
     animDirectHit(atkEl, color = '#d4a843') {
         return new Promise(resolve => {
             const a = this.elCenter(atkEl);
-            const tx = window.innerWidth * (.25 + Math.random() * .5);
-            const ty = window.innerHeight * (.3 + Math.random() * .4);
+            const tx = window.innerWidth / 2;
+            const ty = window.innerHeight / 2;
             const dx = tx - a.x, dy = ty - a.y;
             const length = Math.hypot(dx, dy);
             const angle = Math.atan2(dy, dx) * 180 / Math.PI;
 
+            // Slash beam
             const slash = document.createElement('div');
             slash.className = 'attack-slash';
-            slash.style.cssText = `left:${a.x}px;top:${a.y}px;width:${length}px;background:linear-gradient(90deg,${color}00,${color}ff,${color}44);transform:rotate(${angle}deg);box-shadow:0 0 8px ${color};`;
+            slash.style.cssText = `left:${a.x}px;top:${a.y}px;width:${length}px;height:5px;background:linear-gradient(90deg,${color}00,${color}ff,#ff4040ee,#ff404044);transform:rotate(${angle}deg);box-shadow:0 0 12px ${color},0 0 20px #ff404066;`;
             document.body.appendChild(slash);
             setTimeout(() => slash.remove(), 500);
 
             setTimeout(() => {
+                // Skull burst
                 const burst = document.createElement('div');
                 burst.className = 'impact-burst';
                 burst.textContent = '💀';
-                burst.style.cssText = `left:${tx}px;top:${ty}px;transform:translate(-50%,-50%);color:${color};`;
+                burst.style.cssText = `left:${tx}px;top:${ty}px;transform:translate(-50%,-50%);color:#ff4040;font-size:2.8rem;`;
                 document.body.appendChild(burst);
                 setTimeout(() => burst.remove(), 750);
-            }, 200);
+
+                // Red vignette flash
+                const vig = document.createElement('div');
+                vig.className = 'direct-hit-vignette';
+                document.body.appendChild(vig);
+                setTimeout(() => vig.remove(), 600);
+
+                // Screen shake (stronger for direct hit)
+                document.body.classList.add('screen-shake-heavy');
+                setTimeout(() => document.body.classList.remove('screen-shake-heavy'), 400);
+            }, 180);
 
             setTimeout(resolve, 550);
+        });
+    }
+
+    /** Death/destroy animation — card shatters into fragments */
+    animDeath(slotEl, color = '#d4a843') {
+        return new Promise(resolve => {
+            if (!slotEl) { resolve(); return; }
+            const rect = slotEl.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+
+            // Card shrink + fade
+            slotEl.style.transition = 'transform .35s ease-in, opacity .35s ease-in, filter .35s';
+            slotEl.style.transform = 'scale(0.6) rotate(5deg)';
+            slotEl.style.opacity = '0.3';
+            slotEl.style.filter = 'brightness(2) saturate(0)';
+
+            // Shatter fragments
+            for (let i = 0; i < 12; i++) {
+                const frag = document.createElement('div');
+                frag.className = 'death-fragment';
+                const size = 4 + Math.random() * 10;
+                const ang = (i / 12) * Math.PI * 2 + Math.random() * 0.5;
+                const dist = 40 + Math.random() * 60;
+                frag.style.cssText = `left:${cx}px;top:${cy}px;width:${size}px;height:${size}px;background:${color};--fx:${Math.cos(ang) * dist}px;--fy:${Math.sin(ang) * dist}px;animation-delay:${Math.random() * 80}ms;`;
+                document.body.appendChild(frag);
+                setTimeout(() => frag.remove(), 700);
+            }
+
+            // Soul escape (ghost particles rising)
+            for (let i = 0; i < 6; i++) {
+                setTimeout(() => {
+                    const ghost = document.createElement('div');
+                    ghost.className = 'death-soul';
+                    const offX = (Math.random() - .5) * 40;
+                    ghost.style.cssText = `left:${cx + offX}px;top:${cy}px;color:${color};`;
+                    ghost.textContent = '✦';
+                    document.body.appendChild(ghost);
+                    setTimeout(() => ghost.remove(), 1000);
+                }, i * 60);
+            }
+
+            // Red flash at death point
+            const flash = document.createElement('div');
+            flash.className = 'death-flash';
+            flash.style.cssText = `left:${cx}px;top:${cy}px;background:${color};`;
+            document.body.appendChild(flash);
+            setTimeout(() => flash.remove(), 500);
+
+            // Reset slot style after animation
+            setTimeout(() => {
+                slotEl.style.transition = '';
+                slotEl.style.transform = '';
+                slotEl.style.opacity = '';
+                slotEl.style.filter = '';
+                resolve();
+            }, 400);
         });
     }
 
@@ -1430,6 +1548,10 @@ class Game {
         if (card.ability === 'Martyr' && player === 1) { const ai2 = gs.field[1].findIndex(c => c && c !== card); if (ai2 >= 0) { gs.field[1][ai2].curDef += 3; app.ui.addLog(`Martyr: +3 DEF to ${gs.field[1][ai2].name}!`, 'gain'); } }
         gs.void[player].push(card); gs.field[player][slot] = null;
         if (!silent) app.ui.addLog(`${card.name} destroyed!`, 'dmg');
+        // Death animation on the slot element
+        const deathSlot = document.getElementById('slot_' + player + '_' + slot);
+        const deathColor = app.anim.factionColor(card.type);
+        app.anim.animDeath(deathSlot, deathColor);
         if (player === 2) app.anim.showFloat('⚔ Slain!', 'var(--infernal)');
     }
 
@@ -2611,7 +2733,7 @@ function closeDrawHand() { document.getElementById('drawHandOverlay').classList.
 // ═══════════════════════════════════════════════════════════════════
 
 window.addEventListener('DOMContentLoaded', async () => {
-    // Load all card data from JSON files first
+    // Load all card data from JSON (falls back to embedded data if fetch fails)
     await CardLoader.loadAll();
 
     // Create all managers
